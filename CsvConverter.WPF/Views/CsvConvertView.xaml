@@ -9,46 +9,63 @@
         <StackPanel DockPanel.Dock="Bottom"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
+            <Button Content="抽出"
+                    Width="100"
+                    Height="40"
+                    Command="{Binding InputCommand}"/>
             <Button Content="実行"
                     Width="100"
                     Height="40"
                     Command="{Binding ExecuteCommand}"/>
         </StackPanel>
         <StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0"
-                       Grid.Column="0"
-                       Content="入力ファイル"/>
-                <TextBox Grid.Row="0"
-                         Grid.Column="1"
-                         x:Name="InputCsvFilePathTextBox"
-                         Text="{Binding InputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"
-                         AllowDrop="True">
-                    <i:Interaction.Behaviors>
-                        <behaviors:FileDragDropBehavior/>
-                    </i:Interaction.Behaviors>
-                </TextBox>
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Content="入力ファイル"/>
+                    <TextBox Grid.Row="0"
+                             Grid.Column="1"
+                             x:Name="InputCsvFilePathTextBox"
+                             Text="{Binding InputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"
+                             AllowDrop="True">
+                        <i:Interaction.Behaviors>
+                            <behaviors:FileDragDropBehavior/>
+                        </i:Interaction.Behaviors>
+                    </TextBox>
 
-                <Label Grid.Row="1"
-                       Grid.Column="0"
-                       Content="出力ファイル"/>
-                <TextBox Grid.Row="1"
-                         Grid.Column="1"
-                         Text="{Binding OutputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"
-                         AllowDrop="True">
-                    <i:Interaction.Behaviors>
-                        <behaviors:FileDragDropBehavior/>
-                    </i:Interaction.Behaviors>
-                </TextBox>
-            </Grid>
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Content="出力ファイル"/>
+                    <TextBox Grid.Row="1"
+                             Grid.Column="1"
+                             Text="{Binding OutputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"
+                             AllowDrop="True">
+                        <i:Interaction.Behaviors>
+                            <behaviors:FileDragDropBehavior/>
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel>
+                <DataGrid Height="100"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          ItemsSource="{Binding OutputRows}">
+                    <DataGrid.Columns>
+                        
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
         </StackPanel>
     </DockPanel>
 </UserControl>
