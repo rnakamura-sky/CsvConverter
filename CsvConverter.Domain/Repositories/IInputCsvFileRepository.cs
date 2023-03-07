@@ -1,9 +1,8 @@
 ﻿namespace CsvConverter.Domain.Repositories
 {
-    public interface ICsvFileRepository
+    public interface IInputCsvFileRepository
     {
         string GetData();
 
-        void WriteData(string data);
     }
 }

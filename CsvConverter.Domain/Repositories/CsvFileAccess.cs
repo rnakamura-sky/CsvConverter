@@ -1,6 +1,6 @@
 ﻿namespace CsvConverter.Domain.Repositories
 {
-    internal class CsvFileAccess : ICsvFileRepository
+    internal class CsvFileAccess : IInputCsvFileRepository, IOutputCsvFileRepository
     {
         public string GetData()
         {

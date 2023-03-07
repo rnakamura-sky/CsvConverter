@@ -10,20 +10,20 @@ namespace CsvConverterTest.Tests
         [TestMethod]
         public void CSVファイルを読み取って出力する()
         {
-            var inputCsvFileMock = new Mock<ICsvFileRepository>();
+            var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
             inputCsvFileMock.Setup(x => x.GetData()).Returns("SampleData");
-            var outputCsvFileMock = new Mock<ICsvFileRepository>();
+            var outputCsvFileMock = new Mock<IOutputCsvFileRepository>();
             outputCsvFileMock.Setup(x => x.WriteData("SampleData")).Callback((string data) =>
             {
                 Assert.AreEqual("SampleData", data);
             });
 
-            var inputCsvFile = new CsvFileEntity(inputCsvFileMock.Object, "InputFilePath");
+            var inputCsvFile = new InputCsvFileEntity(inputCsvFileMock.Object, "InputFilePath");
 
             var data = inputCsvFile.GetData();
             Assert.AreEqual("SampleData", data);
 
-            var outputCsvFile = new CsvFileEntity(outputCsvFileMock.Object, "OutputFilePath");
+            var outputCsvFile = new OutputCsvFileEntity(outputCsvFileMock.Object, "OutputFilePath");
             outputCsvFile.WriteData(data);
 
 

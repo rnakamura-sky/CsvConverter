@@ -7,32 +7,28 @@ namespace CsvConverter.Domain.Entities
     /// インターフェースを持ち、外部とやり取りを行う
     /// 完全コンストラクタパターンにはなりません。
     /// </summary>
-    public class CsvFileEntity
+    public class InputCsvFileEntity
     {
-        private ICsvFileRepository _csvFileRepository;
+        private IInputCsvFileRepository _inputCsvFileRepository;
         public string CsvFilePath { get; }
 
-        public CsvFileEntity(string csvFilePath)
+        public InputCsvFileEntity(string csvFilePath)
             : this(new CsvFileAccess(), csvFilePath)
         {
 
         }
 
-        public CsvFileEntity(ICsvFileRepository csvFileRepository, string csvFilePath)
+        public InputCsvFileEntity(IInputCsvFileRepository inputCsvFileRepository, string csvFilePath)
         {
-            _csvFileRepository = csvFileRepository;
+            _inputCsvFileRepository = inputCsvFileRepository;
             CsvFilePath = csvFilePath;
         }
 
         public string GetData()
         {
-            return _csvFileRepository.GetData();
+            return _inputCsvFileRepository.GetData();
         }
 
-        public void WriteData(string data)
-        {
-            _csvFileRepository.WriteData(data);
-        }
 
     }
 }
