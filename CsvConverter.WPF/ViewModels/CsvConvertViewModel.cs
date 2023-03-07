@@ -15,7 +15,6 @@ namespace CsvConverter.WPF.ViewModels
 
         }
             
-
         public CsvConvertViewModel(ICsvConvertLogic logic)
         {
             _logic = logic;
@@ -41,7 +40,7 @@ namespace CsvConverter.WPF.ViewModels
         private void ExecuteCommandExecute()
         {
             var inputCsvFile = new InputCsvFileEntity(InputCsvFilePath);
-            var outputCsvFile = new InputCsvFileEntity(OutputCsvFilePath);
+            var outputCsvFile = new OutputCsvFileEntity(OutputCsvFilePath);
 
             _logic.Execute(inputCsvFile, outputCsvFile);
 

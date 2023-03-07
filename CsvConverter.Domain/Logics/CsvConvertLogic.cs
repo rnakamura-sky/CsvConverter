@@ -4,9 +4,10 @@ namespace CsvConverter.Domain.Logics
 {
     public class CsvConvertLogic : ICsvConvertLogic
     {
-        public void Execute(InputCsvFileEntity inputCsvFile, InputCsvFileEntity outputCsvFile)
+        public void Execute(InputCsvFileEntity inputCsvFile, OutputCsvFileEntity outputCsvFile)
         {
-            throw new NotImplementedException();
+            var data = inputCsvFile.GetData();
+            outputCsvFile.WriteData(data);
         }
     }
 }
