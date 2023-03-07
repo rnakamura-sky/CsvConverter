@@ -14,7 +14,8 @@ namespace CsvConverterTest.Tests
             var inputFileString =
 @"Field1,Field2,Field3,Field4,Field5
 A,B,C,D,E
-a,b,c,d,e";
+a,b,c,d,e
+";
 
             var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
             inputCsvFileMock.Setup(x => x.GetData("InputFilePath")).Returns(inputFileString);
@@ -70,10 +71,10 @@ a,b,c,d,e";
             var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
             inputCsvFileMock.Setup(x => x.GetData(It.IsAny<string>())).Returns("SampleData");
             var outputCsvFileMock = new Mock<IOutputCsvFileRepository>();
-            outputCsvFileMock.Setup(x => x.WriteData("OutputFilePath", "SampleData")).Callback((string filePath, string data) =>
+            outputCsvFileMock.Setup(x => x.WriteData("OutputFilePath", It.IsAny<string>())).Callback((string filePath, string data) =>
             {
                 Assert.AreEqual("OutputFilePath", filePath);
-                Assert.AreEqual("SampleData", data);
+                Assert.AreEqual("SampleData\r\n", data);
             });
 
             var inputCsvFile = new InputCsvFileEntity(inputCsvFileMock.Object, "InputFilePath");

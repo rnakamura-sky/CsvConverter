@@ -22,7 +22,7 @@
             HasHeader = true;
             FileString = fileString;
 
-            var rowStrings = FileString.Split("\r\n");
+            var rowStrings = FileString.Split(Environment.NewLine);
             var isHeader = true;
             Headers = new List<HeaderEntity>();
 
@@ -44,6 +44,12 @@
                     continue;
                 }
 
+                ////空白行は無視する
+                if (rowString == string.Empty)
+                {
+                    continue;
+                }
+
                 var dataStrings = rowString.Split(",");
                 var datas = new List<FieldEntity>();
                 var dataIndex = 0;
@@ -59,7 +65,40 @@
         }
         public string GetFileString()
         {
-            return FileString;
+            var result = string.Empty;
+            
+            if (HasHeader)
+            {
+                var isFirst = true;
+                foreach(var header in Headers)
+                {
+                    if (isFirst)
+                    {
+                        result += header.Header;
+                        isFirst = false;
+                        continue;
+                    }
+                    result += "," + header.Header;
+                }
+                result += Environment.NewLine;
+            }
+            foreach(var row in Data)
+            {
+                var isFirst = true;
+                foreach(var field in row.Fields)
+                {
+                    if (isFirst)
+                    {
+                        result += field.Data;
+                        isFirst = false;
+                        continue;
+                    }
+                    result += "," + field.Data;
+                }
+                result += Environment.NewLine;
+            }
+
+            return result;
         }
     }
 }

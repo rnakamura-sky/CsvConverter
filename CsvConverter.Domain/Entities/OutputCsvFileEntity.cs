@@ -19,7 +19,6 @@ namespace CsvConverter.Domain.Entities
             CsvFilePath = outputCsvFilePath;
         }
 
-
         public void WriteData(FileDataEntity data)
         {
             var fileString = data.GetFileString();
