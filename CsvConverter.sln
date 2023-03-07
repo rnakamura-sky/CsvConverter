@@ -3,19 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvConverter.WPF", "CsvConverter.WPF\CsvConverter.WPF.csproj", "{13981BF6-0784-407B-A700-9A9E8C99D281}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvConverter.WPF", "CsvConverter.WPF\CsvConverter.WPF.csproj", "{13981BF6-0784-407B-A700-9A9E8C99D281}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{30A3CAC5-3277-441E-BBA6-A82D443ED6A1}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		RequirementDefinition.md = RequirementDefinition.md
+		ToDoList.md = ToDoList.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvConverter.Domain", "CsvConverter.Domain\CsvConverter.Domain.csproj", "{C7C400D3-0A40-4DF2-96CA-E94BBEABD95D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvConverter.Domain", "CsvConverter.Domain\CsvConverter.Domain.csproj", "{C7C400D3-0A40-4DF2-96CA-E94BBEABD95D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvConverter.Infrastructure", "CsvConverter.Infrastructure\CsvConverter.Infrastructure.csproj", "{872AD05B-3FEC-432B-8497-AAFDE416BE2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvConverter.Infrastructure", "CsvConverter.Infrastructure\CsvConverter.Infrastructure.csproj", "{872AD05B-3FEC-432B-8497-AAFDE416BE2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvConverterTest.Tests", "CsvConverterTest.Tests\CsvConverterTest.Tests.csproj", "{89461AB4-03AA-4B51-AF22-551981DEEF58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvConverterTest.Tests", "CsvConverterTest.Tests\CsvConverterTest.Tests.csproj", "{89461AB4-03AA-4B51-AF22-551981DEEF58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
