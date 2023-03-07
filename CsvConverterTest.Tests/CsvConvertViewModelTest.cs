@@ -22,10 +22,14 @@ namespace CsvConverterTest.Tests
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
+            Assert.AreEqual(false, viewModel.ExecuteCommand.CanExecute());
 
             viewModel.InputCsvFilePath = "InputCsvFilePath";
+            Assert.AreEqual(false, viewModel.ExecuteCommand.CanExecute());
+
             viewModel.OutputCsvFilePath = "OutputCsvFilePath";
 
+            Assert.AreEqual(true, viewModel.ExecuteCommand.CanExecute());
             viewModel.ExecuteCommand.Execute();
 
             logicMock.VerifyAll();

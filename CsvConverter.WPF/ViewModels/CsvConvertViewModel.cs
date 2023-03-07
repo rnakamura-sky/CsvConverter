@@ -18,21 +18,33 @@ namespace CsvConverter.WPF.ViewModels
         public CsvConvertViewModel(ICsvConvertLogic logic)
         {
             _logic = logic;
-            ExecuteCommand = new DelegateCommand(ExecuteCommandExecute);
+            ExecuteCommand = new DelegateCommand(ExecuteCommandExecute, CanExecuteCommand);
         }
 
         private string _inputCsvFilePath = string.Empty;
         public string InputCsvFilePath
         {
             get { return _inputCsvFilePath; }
-            set { SetProperty(ref _inputCsvFilePath, value); }
+            set
+            {
+                if (SetProperty(ref _inputCsvFilePath, value))
+                {
+                    ExecuteCommand.RaiseCanExecuteChanged();
+                }
+            }
         }
 
         private string _outputCsvFilePath = string.Empty;
         public string OutputCsvFilePath
         {
             get { return _outputCsvFilePath; }
-            set { SetProperty(ref _outputCsvFilePath, value); }
+            set
+            {
+                if (SetProperty(ref _outputCsvFilePath, value))
+                {
+                    ExecuteCommand.RaiseCanExecuteChanged();
+                }
+            }
         }
 
         public DelegateCommand ExecuteCommand { get; }
@@ -44,6 +56,19 @@ namespace CsvConverter.WPF.ViewModels
 
             _logic.Execute(inputCsvFile, outputCsvFile);
 
+        }
+
+        private bool CanExecuteCommand()
+        {
+            if (InputCsvFilePath == string.Empty)
+            {
+                return false;
+            }
+            if (OutputCsvFilePath == string.Empty)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
