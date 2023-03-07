@@ -1,7 +1,9 @@
 ﻿<UserControl x:Class="CsvConverter.WPF.Views.CsvConvertView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:prism="http://prismlibrary.com/"             
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behaviors="clr-namespace:CsvConverter.WPF.Views.Behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Bottom"
@@ -27,14 +29,25 @@
                        Content="入力ファイル"/>
                 <TextBox Grid.Row="0"
                          Grid.Column="1"
-                         Text="{Binding InputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+                         x:Name="InputCsvFilePathTextBox"
+                         Text="{Binding InputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"
+                         AllowDrop="True">
+                    <i:Interaction.Behaviors>
+                        <behaviors:FileDragDropBehavior/>
+                    </i:Interaction.Behaviors>
+                </TextBox>
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
                        Content="出力ファイル"/>
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
-                         Text="{Binding OutputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding OutputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"
+                         AllowDrop="True">
+                    <i:Interaction.Behaviors>
+                        <behaviors:FileDragDropBehavior/>
+                    </i:Interaction.Behaviors>
+                </TextBox>
             </Grid>
         </StackPanel>
     </DockPanel>
