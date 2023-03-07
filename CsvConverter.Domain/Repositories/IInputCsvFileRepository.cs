@@ -1,4 +1,6 @@
-﻿namespace CsvConverter.Domain.Repositories
+﻿using CsvConverter.Domain.Entities;
+
+namespace CsvConverter.Domain.Repositories
 {
     public interface IInputCsvFileRepository
     {

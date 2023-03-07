@@ -2,7 +2,7 @@
 
 namespace CsvConverter.Domain.Entities
 {
-    public class OutputCsvFileEntity
+    public sealed class OutputCsvFileEntity
     {
         private IOutputCsvFileRepository _outputCsvFileRepository;
 
@@ -20,9 +20,10 @@ namespace CsvConverter.Domain.Entities
         }
 
 
-        public void WriteData(string data)
+        public void WriteData(FileDataEntity data)
         {
-            _outputCsvFileRepository.WriteData(CsvFilePath, data);
+            var fileString = data.GetFileString();
+            _outputCsvFileRepository.WriteData(CsvFilePath, fileString);
         }
     }
 }
