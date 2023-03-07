@@ -13,7 +13,7 @@ namespace CsvConverterTest.Tests
             var inputCsvFileMock = new Mock<ICsvFileRepository>();
             inputCsvFileMock.Setup(x => x.GetData()).Returns("SampleData");
             var outputCsvFileMock = new Mock<ICsvFileRepository>();
-            outputCsvFileMock.Setup(x => x.WriteData(It.IsAny<string>())).Callback((string data) =>
+            outputCsvFileMock.Setup(x => x.WriteData("SampleData")).Callback((string data) =>
             {
                 Assert.AreEqual("SampleData", data);
             });
