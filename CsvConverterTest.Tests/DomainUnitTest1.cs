@@ -12,10 +12,11 @@ namespace CsvConverterTest.Tests
         public void CSVファイルを読み取って出力する()
         {
             var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
-            inputCsvFileMock.Setup(x => x.GetData()).Returns("SampleData");
+            inputCsvFileMock.Setup(x => x.GetData("InputFilePath")).Returns("SampleData");
             var outputCsvFileMock = new Mock<IOutputCsvFileRepository>();
-            outputCsvFileMock.Setup(x => x.WriteData("SampleData")).Callback((string data) =>
+            outputCsvFileMock.Setup(x => x.WriteData("OutputFilePath", "SampleData")).Callback((string filePath, string data) =>
             {
+                Assert.AreEqual("OutputFilePath", filePath);
                 Assert.AreEqual("SampleData", data);
             });
 
@@ -37,10 +38,11 @@ namespace CsvConverterTest.Tests
         public void ロジックのテスト()
         {
             var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
-            inputCsvFileMock.Setup(x => x.GetData()).Returns("SampleData");
+            inputCsvFileMock.Setup(x => x.GetData(It.IsAny<string>())).Returns("SampleData");
             var outputCsvFileMock = new Mock<IOutputCsvFileRepository>();
-            outputCsvFileMock.Setup(x => x.WriteData("SampleData")).Callback((string data) =>
+            outputCsvFileMock.Setup(x => x.WriteData(It.IsAny<string>(), "SampleData")).Callback((string filePath, string data) =>
             {
+                Assert.AreEqual("OutputFilePath", filePath);
                 Assert.AreEqual("SampleData", data);
             });
 

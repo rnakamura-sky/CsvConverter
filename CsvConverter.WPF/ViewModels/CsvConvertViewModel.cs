@@ -14,7 +14,7 @@ namespace CsvConverter.WPF.ViewModels
         {
 
         }
-            
+
         public CsvConvertViewModel(ICsvConvertLogic logic)
         {
             _logic = logic;

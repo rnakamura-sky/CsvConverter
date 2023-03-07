@@ -2,14 +2,14 @@
 {
     internal class CsvFileAccess : IInputCsvFileRepository, IOutputCsvFileRepository
     {
-        public string GetData()
+        public string GetData(string filePath)
         {
-            throw new NotImplementedException();
+            return File.ReadAllText(filePath);
         }
 
-        public void WriteData(string data)
+        public void WriteData(string filePath, string data)
         {
-            throw new NotImplementedException();
+            File.WriteAllText(filePath, data);
         }
     }
 }

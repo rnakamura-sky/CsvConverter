@@ -22,7 +22,7 @@ namespace CsvConverter.Domain.Entities
 
         public void WriteData(string data)
         {
-            _outputCsvFileRepository.WriteData(data);
+            _outputCsvFileRepository.WriteData(CsvFilePath, data);
         }
     }
 }

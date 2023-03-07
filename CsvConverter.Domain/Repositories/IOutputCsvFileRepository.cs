@@ -2,6 +2,6 @@
 {
     public interface IOutputCsvFileRepository
     {
-        void WriteData(string data);
+        void WriteData(string filePath, string data);
     }
 }

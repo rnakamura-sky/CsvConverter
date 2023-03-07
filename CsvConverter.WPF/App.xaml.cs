@@ -16,7 +16,7 @@ namespace CsvConverter.WPF
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.Register<Views.CsvConvertView>();
         }
     }
 }

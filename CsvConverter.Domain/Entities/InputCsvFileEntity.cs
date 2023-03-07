@@ -9,7 +9,7 @@ namespace CsvConverter.Domain.Entities
     /// </summary>
     public class InputCsvFileEntity
     {
-        private IInputCsvFileRepository _inputCsvFileRepository;
+        private readonly IInputCsvFileRepository _inputCsvFileRepository;
         public string CsvFilePath { get; }
 
         public InputCsvFileEntity(string csvFilePath)
@@ -26,7 +26,7 @@ namespace CsvConverter.Domain.Entities
 
         public string GetData()
         {
-            return _inputCsvFileRepository.GetData();
+            return _inputCsvFileRepository.GetData(CsvFilePath);
         }
 
 

@@ -3,7 +3,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"             
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
-            
-    </Grid>
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Bottom"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="実行"
+                    Width="100"
+                    Height="40"
+                    Command="{Binding ExecuteCommand}"/>
+        </StackPanel>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Content="入力ファイル"/>
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         Text="{Binding InputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Content="出力ファイル"/>
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Text="{Binding OutputCsvFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+        </StackPanel>
+    </DockPanel>
 </UserControl>

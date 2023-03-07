@@ -2,7 +2,7 @@
 {
     public interface IInputCsvFileRepository
     {
-        string GetData();
+        string GetData(string filePath);
 
     }
 }
