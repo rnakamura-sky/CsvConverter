@@ -20,9 +20,9 @@ namespace CsvConverter.WPF.ViewModels
             FieldName = _entity.Header;
         }
 
-        public OutputRowSettingEntity GetRowSettingEntity(int index)
+        public OutputColumnSettingEntity GetRowSettingEntity(int index)
         {
-            return new OutputRowSettingEntity(index, true, FieldName, true);
+            return new OutputColumnSettingEntity(index, true, FieldName, true);
         }
     }
 }

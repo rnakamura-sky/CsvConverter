@@ -1,19 +1,39 @@
 ﻿namespace CsvConverter.Domain.Entities
 {
+    /// <summary>
+    /// CSVファイルの情報を管理するEntity
+    /// </summary>
     public sealed class FileDataEntity
     {
 
+        /// <summary>
+        /// ヘッダー情報
+        /// </summary>
         public IReadOnlyList<HeaderEntity> Headers { get; }
 
+        /// <summary>
+        /// 行情報
+        /// </summary>
         public IReadOnlyList<RowEntity> Data { get; }
 
+        /// <summary>
+        /// ヘッダー有無
+        /// </summary>
         public bool HasHeader { get; }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public FileDataEntity()
             : this(new List<HeaderEntity>(), new List<RowEntity>())
         {
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="headers">ヘッダー情報</param>
+        /// <param name="data">行情報</param>
         public FileDataEntity(IReadOnlyList<HeaderEntity> headers, IReadOnlyList<RowEntity> data)
         {
             ////TODO:それぞれのコンストラクタで設定しているため、共通化が必要
@@ -23,6 +43,10 @@
             Data = data;
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="fileString">CSVファイル全てのデータ</param>
         public FileDataEntity(string fileString)
         {
             HasHeader = true;
@@ -68,6 +92,11 @@
             }
             Data = rows;
         }
+
+        /// <summary>
+        /// ファイル情報を文字列として取得
+        /// </summary>
+        /// <returns></returns>
         public string GetFileString()
         {
             var result = string.Empty;

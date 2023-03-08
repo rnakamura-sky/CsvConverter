@@ -58,11 +58,11 @@
 
             <StackPanel>
                 <ListView Height="100"
-                          ItemsSource="{Binding OutputRows}"
-                          SelectedIndex="{Binding SelectedOutputRowIndex}"
+                          ItemsSource="{Binding OutputColumns}"
+                          SelectedIndex="{Binding SelectedOutputColumnIndex}"
                           AllowDrop="True">
                     <i:Interaction.Behaviors>
-                        <behaviors:DragReplaceItemBehavior Callback="{Binding ReplaceOutputRowCommand}"/>
+                        <behaviors:DragReplaceItemBehavior Callback="{Binding ReplaceOutputColumnCommand}"/>
                     </i:Interaction.Behaviors>
                     <ListView.ItemTemplate>
                         <DataTemplate>

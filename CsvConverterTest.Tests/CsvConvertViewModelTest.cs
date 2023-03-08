@@ -75,7 +75,7 @@ b,c,a
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
             Assert.AreEqual(false, viewModel.ExecuteCommand.CanExecute());
-            Assert.AreEqual(0, viewModel.OutputRows.Count);
+            Assert.AreEqual(0, viewModel.OutputColumns.Count);
             Assert.AreEqual(false, viewModel.InputCommand.CanExecute());
 
             viewModel.InputCsvFilePath = "InputCsvFilePath";
@@ -83,16 +83,16 @@ b,c,a
             Assert.AreEqual(true, viewModel.InputCommand.CanExecute());
 
             viewModel.InputCommand.Execute();
-            Assert.AreEqual(3, viewModel.OutputRows.Count);
-            Assert.AreEqual("Field1", viewModel.OutputRows[0].FieldName);
-            Assert.AreEqual("Field2", viewModel.OutputRows[1].FieldName);
-            Assert.AreEqual("Field3", viewModel.OutputRows[2].FieldName);
+            Assert.AreEqual(3, viewModel.OutputColumns.Count);
+            Assert.AreEqual("Field1", viewModel.OutputColumns[0].FieldName);
+            Assert.AreEqual("Field2", viewModel.OutputColumns[1].FieldName);
+            Assert.AreEqual("Field3", viewModel.OutputColumns[2].FieldName);
 
-            viewModel.SelectedOutputRowIndex = 0;
-            viewModel.ReplaceOutputRowCommand.Execute(2);
-            Assert.AreEqual("Field2", viewModel.OutputRows[0].FieldName);
-            Assert.AreEqual("Field3", viewModel.OutputRows[1].FieldName);
-            Assert.AreEqual("Field1", viewModel.OutputRows[2].FieldName);
+            viewModel.SelectedOutputColumnIndex = 0;
+            viewModel.ReplaceOutputColumnCommand.Execute(2);
+            Assert.AreEqual("Field2", viewModel.OutputColumns[0].FieldName);
+            Assert.AreEqual("Field3", viewModel.OutputColumns[1].FieldName);
+            Assert.AreEqual("Field1", viewModel.OutputColumns[2].FieldName);
 
             viewModel.OutputCsvFilePath = "OutputCsvFilePath";
 

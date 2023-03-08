@@ -8,17 +8,36 @@ using System.Collections.ObjectModel;
 
 namespace CsvConverter.WPF.ViewModels
 {
+    /// <summary>
+    /// CSVファイル変換ViewModel
+    /// </summary>
     public class CsvConvertViewModel : BindableBase
     {
+        /// <summary>
+        /// 出力ファイル作成ロジック
+        /// </summary>
         private ICsvConvertLogic _logic;
+
+        /// <summary>
+        /// CSVファイルリポジトリ
+        /// </summary>
         private ICsvFileRepository _csvFileRepository;
 
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public CsvConvertViewModel()
             : this(new CsvConvertLogic(), new CsvFileAccess())
         {
 
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="logic">出力ファイル作成ロジック</param>
+        /// <param name="csvFileRepository">CSVファイルリポジトリ</param>
         public CsvConvertViewModel(ICsvConvertLogic logic, ICsvFileRepository csvFileRepository)
         {
             _logic = logic;
@@ -26,10 +45,14 @@ namespace CsvConverter.WPF.ViewModels
 
             ExecuteCommand = new DelegateCommand(ExecuteCommandExecute, CanExecuteCommand);
             InputCommand = new DelegateCommand(ExecuteInputCommand, CanInputCommand);
-            ReplaceOutputRowCommand = new DelegateCommand<int?>(ExecuteReplaceOutputRowCommand);
+            ReplaceOutputColumnCommand = new DelegateCommand<int?>(ExecuteReplaceOutputColumnCommand);
         }
 
         private string _inputCsvFilePath = string.Empty;
+        
+        /// <summary>
+        /// 入力CSVファイルパス
+        /// </summary>
         public string InputCsvFilePath
         {
             get { return _inputCsvFilePath; }
@@ -44,6 +67,10 @@ namespace CsvConverter.WPF.ViewModels
         }
 
         private string _outputCsvFilePath = string.Empty;
+
+        /// <summary>
+        /// 出力CSVファイルパス
+        /// </summary>
         public string OutputCsvFilePath
         {
             get { return _outputCsvFilePath; }
@@ -56,27 +83,44 @@ namespace CsvConverter.WPF.ViewModels
             }
         }
 
-        private ObservableCollection<CsvConvertViewModelHeader> _outputRows = new();
+        private ObservableCollection<CsvConvertViewModelHeader> _outputColumns = new();
 
-        
-        public ObservableCollection<CsvConvertViewModelHeader> OutputRows {
-            get => _outputRows;
-            private set => SetProperty(ref _outputRows, value);
+        /// <summary>
+        /// 出力行情報
+        /// </summary>
+        public ObservableCollection<CsvConvertViewModelHeader> OutputColumns {
+            get => _outputColumns;
+            private set => SetProperty(ref _outputColumns, value);
         }
 
-        private int _selectedOutputRowIndex;
-        public int SelectedOutputRowIndex
+        /// <summary>
+        /// 選択列インデックス
+        /// </summary>
+        private int _selectedOutputColumnIndex;
+        public int SelectedOutputColumnIndex
         {
-            get { return _selectedOutputRowIndex; }
-            set { SetProperty(ref _selectedOutputRowIndex, value); }
+            get { return _selectedOutputColumnIndex; }
+            set { SetProperty(ref _selectedOutputColumnIndex, value); }
         }
 
+        /// <summary>
+        /// 出力ファイル作成実行コマンド
+        /// </summary>
         public DelegateCommand ExecuteCommand { get; }
 
+        /// <summary>
+        /// 入力ファイル情報取得コマンド
+        /// </summary>
         public DelegateCommand InputCommand { get; }
 
-        public DelegateCommand<int?> ReplaceOutputRowCommand { get; }
+        /// <summary>
+        /// 出力項目並び替えコマンド
+        /// </summary>
+        public DelegateCommand<int?> ReplaceOutputColumnCommand { get; }
 
+        /// <summary>
+        /// 出力ファイル作成コマンド実行
+        /// </summary>
         private void ExecuteCommandExecute()
         {
             var inputCsvFile = new InputCsvFileEntity(_csvFileRepository, InputCsvFilePath);
@@ -86,6 +130,10 @@ namespace CsvConverter.WPF.ViewModels
             _logic.Execute(inputCsvFile, outputCsvFile, outputSetting);
         }
 
+        /// <summary>
+        /// 出力ファイル作成コマンド実行可否
+        /// </summary>
+        /// <returns>ボタン可否</returns>
         private bool CanExecuteCommand()
         {
             if (InputCsvFilePath == string.Empty)
@@ -99,19 +147,25 @@ namespace CsvConverter.WPF.ViewModels
             return true;
         }
 
-
+        /// <summary>
+        /// 入力ファイル情報取得コマンド実行
+        /// </summary>
         private void ExecuteInputCommand()
         {
             var inputCsvFile = new InputCsvFileEntity(_csvFileRepository, InputCsvFilePath);
             var fileData = inputCsvFile.GetData();
 
-            OutputRows.Clear();
+            OutputColumns.Clear();
             foreach (var header in fileData.Headers)
             {
-                OutputRows.Add(new CsvConvertViewModelHeader(header));
+                OutputColumns.Add(new CsvConvertViewModelHeader(header));
             }
         }
 
+        /// <summary>
+        /// 入力ファイル情報取得コマンド可否
+        /// </summary>
+        /// <returns>ボタン可否</returns>
         private bool CanInputCommand()
         {
             if (InputCsvFilePath == string.Empty)
@@ -121,30 +175,38 @@ namespace CsvConverter.WPF.ViewModels
             return true;
         }
 
-        private void ExecuteReplaceOutputRowCommand(int? index)
+        /// <summary>
+        /// 出力項目並び替えコマンド実行
+        /// </summary>
+        /// <param name="index">並び替え位置</param>
+        private void ExecuteReplaceOutputColumnCommand(int? index)
         {
             if (index is null)
             {
                 return;
             }
-            OutputRows.Move(SelectedOutputRowIndex, index.Value);
+            OutputColumns.Move(SelectedOutputColumnIndex, index.Value);
         }
 
+        /// <summary>
+        /// 出力設定情報取得
+        /// </summary>
+        /// <returns>出力設定情報Entity</returns>
         private OutputSettingEntity GetOutputSetting()
         {
-            if (OutputRows.Count == 0)
+            if (OutputColumns.Count == 0)
             {
                 return OutputSettingEntity.None;
             }
-            var settingRows = new List<OutputRowSettingEntity>();
+            var settingColumns = new List<OutputColumnSettingEntity>();
             var index = 0;
-            foreach (var row in OutputRows)
+            foreach (var row in OutputColumns)
             {
-                settingRows.Add(row.GetRowSettingEntity(index));
+                settingColumns.Add(row.GetRowSettingEntity(index));
                 index++;
             }
 
-            return new OutputSettingEntity(settingRows);
+            return new OutputSettingEntity(settingColumns);
         }
     }
 }

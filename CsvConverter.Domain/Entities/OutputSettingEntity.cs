@@ -4,27 +4,27 @@
     {
         public static readonly OutputSettingEntity None = new();
 
-        public IReadOnlyList<OutputRowSettingEntity> RowSettings { get; }
+        public IReadOnlyList<OutputColumnSettingEntity> RowSettings { get; }
 
         private OutputSettingEntity()
         {
-            RowSettings= new List<OutputRowSettingEntity>();
+            RowSettings= new List<OutputColumnSettingEntity>();
         }
 
 
         public OutputSettingEntity(FileDataEntity fileDataEntity)
         {
-            var rowSettings = new List<OutputRowSettingEntity>();
+            var rowSettings = new List<OutputColumnSettingEntity>();
             int index = 0;
             foreach (var header in fileDataEntity.Headers)
             {
-                rowSettings.Add(new OutputRowSettingEntity(index, true, header.Header, true));
+                rowSettings.Add(new OutputColumnSettingEntity(index, true, header.Header, true));
                 index++;
             }
             RowSettings = rowSettings;
         }
 
-        public OutputSettingEntity(IReadOnlyList<OutputRowSettingEntity> rowSettings)
+        public OutputSettingEntity(IReadOnlyList<OutputColumnSettingEntity> rowSettings)
         {
             RowSettings = rowSettings;
         }
