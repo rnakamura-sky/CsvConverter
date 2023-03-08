@@ -34,7 +34,12 @@
             int index = 0;
             foreach (var header in fileDataEntity.Headers)
             {
-                rowSettings.Add(new OutputColumnSettingEntity(index, true, header.Header, true));
+                rowSettings.Add(new OutputColumnSettingEntity(
+                                        index,
+                                        header.Header,
+                                        true,
+                                        header.Header,
+                                        true));
                 index++;
             }
             ColumnSettings = rowSettings;
@@ -65,7 +70,7 @@
             {
                 if (row.IsOutput)
                 {
-                    headers.Add(new HeaderEntity(index, row.InputHeader));
+                    headers.Add(new HeaderEntity(index, row.OutputHeader));
                     index++;
                 }
             }

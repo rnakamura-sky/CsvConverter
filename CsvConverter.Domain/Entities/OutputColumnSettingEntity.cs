@@ -26,15 +26,21 @@
         public bool IsOutput { get; }
 
         /// <summary>
+        /// 出力ヘッダー名
+        /// </summary>
+        public string OutputHeader { get; }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="index">インデックス</param>
         /// <param name="isInputField">入力ファイル項目かのチェック</param>
         /// <param name="inputHeader">入力ファイル項目でのヘッダー名</param>
         /// <param name="isOutput">出力有無フラグ</param>
-        public OutputColumnSettingEntity(int index, bool isInputField, string inputHeader, bool isOutput)
+        public OutputColumnSettingEntity(int index, string outputHeader, bool isInputField, string inputHeader, bool isOutput)
         {
             Index = index;
+            OutputHeader = outputHeader;
             IsInputField = isInputField;
             InputHeader = inputHeader;
             IsOutput = isOutput;

@@ -3,8 +3,10 @@ using CsvConverter.Domain.Logics;
 using CsvConverter.Domain.Repositories;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Animation;
 
 namespace CsvConverter.WPF.ViewModels
 {
@@ -13,22 +15,24 @@ namespace CsvConverter.WPF.ViewModels
     /// </summary>
     public class CsvConvertViewModel : BindableBase
     {
+        private readonly IDialogService _dialogService;
+
         /// <summary>
         /// 出力ファイル作成ロジック
         /// </summary>
-        private ICsvConvertLogic _logic;
+        private readonly ICsvConvertLogic _logic;
 
         /// <summary>
         /// CSVファイルリポジトリ
         /// </summary>
-        private ICsvFileRepository _csvFileRepository;
+        private readonly ICsvFileRepository _csvFileRepository;
 
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public CsvConvertViewModel()
-            : this(new CsvConvertLogic(), new CsvFileAccess())
+        public CsvConvertViewModel(IDialogService dialogService)
+            : this(dialogService, new CsvConvertLogic(), new CsvFileAccess())
         {
 
         }
@@ -38,14 +42,16 @@ namespace CsvConverter.WPF.ViewModels
         /// </summary>
         /// <param name="logic">出力ファイル作成ロジック</param>
         /// <param name="csvFileRepository">CSVファイルリポジトリ</param>
-        public CsvConvertViewModel(ICsvConvertLogic logic, ICsvFileRepository csvFileRepository)
+        public CsvConvertViewModel(IDialogService dialogService, ICsvConvertLogic logic, ICsvFileRepository csvFileRepository)
         {
+            _dialogService = dialogService;
             _logic = logic;
             _csvFileRepository = csvFileRepository;
 
             ExecuteCommand = new DelegateCommand(ExecuteCommandExecute, CanExecuteCommand);
             InputCommand = new DelegateCommand(ExecuteInputCommand, CanInputCommand);
             ReplaceOutputColumnCommand = new DelegateCommand<int?>(ExecuteReplaceOutputColumnCommand);
+            CreateCommand = new DelegateCommand(ExecuteCreateCommand);
         }
 
         private string _inputCsvFilePath = string.Empty;
@@ -119,6 +125,11 @@ namespace CsvConverter.WPF.ViewModels
         public DelegateCommand<int?> ReplaceOutputColumnCommand { get; }
 
         /// <summary>
+        /// 新出力項目作成コマンド
+        /// </summary>
+        public DelegateCommand CreateCommand { get; }
+
+        /// <summary>
         /// 出力ファイル作成コマンド実行
         /// </summary>
         private void ExecuteCommandExecute()
@@ -154,11 +165,12 @@ namespace CsvConverter.WPF.ViewModels
         {
             var inputCsvFile = new InputCsvFileEntity(_csvFileRepository, InputCsvFilePath);
             var fileData = inputCsvFile.GetData();
+            var outputSetting = new OutputSettingEntity(fileData);
 
             OutputColumns.Clear();
-            foreach (var header in fileData.Headers)
+            foreach (var columnSetting in outputSetting.ColumnSettings)
             {
-                OutputColumns.Add(new CsvConvertViewModelHeader(header));
+                OutputColumns.Add(new CsvConvertViewModelHeader(columnSetting));
             }
         }
 
@@ -207,6 +219,32 @@ namespace CsvConverter.WPF.ViewModels
             }
 
             return new OutputSettingEntity(settingColumns);
+        }
+
+        /// <summary>
+        /// 新出力項目作成コマンド実行
+        /// </summary>
+        private void ExecuteCreateCommand()
+        {
+            var headers = new List<HeaderEntity>();
+            foreach(var column in OutputColumns)
+            {
+                headers.Add(column.GetHeader());
+            }
+
+            var parameters = new DialogParameters();
+            parameters.Add(nameof(CreateOutputColumnViewModel.Headers), headers);
+            _dialogService.ShowDialog(
+                nameof(Views.CreateOutputColumnView),
+                parameters,
+                result => {
+                    if (result.Result == ButtonResult.OK)
+                    {
+                        var newOutputColumnSettingEntity
+                            = result.Parameters.GetValue<OutputColumnSettingEntity>(nameof(OutputColumnSettingEntity));
+                        OutputColumns.Add(new CsvConvertViewModelHeader(newOutputColumnSettingEntity));
+                    }
+                });
         }
     }
 }

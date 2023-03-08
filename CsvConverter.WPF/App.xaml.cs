@@ -16,7 +16,11 @@ namespace CsvConverter.WPF
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            ////画面遷移用登録
             containerRegistry.Register<Views.CsvConvertView>();
+
+            ////ダイアログ用登録
+            containerRegistry.RegisterDialog<Views.CreateOutputColumnView>();
         }
     }
 }

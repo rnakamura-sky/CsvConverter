@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="CsvConverter.WPF.Views.CreateOutputColumnView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <StackPanel>
+        <TextBox Text="{Binding HeaderName}"/>
+        <CheckBox IsChecked="{Binding IsOutput}"/>
+        <ComboBox ItemsSource="{Binding Headers}"
+                  DisplayMemberPath="Header"
+                  SelectedItem="{Binding SelectedInputHeader}"/>
+        <CheckBox IsChecked="{Binding IsInputHeader}"
+                  IsEnabled="False"/>
+        <Button Content="作成"
+                Command="{Binding CreateCommand}"/>
+        <Button Content="キャンセル"
+                Command="{Binding CancelCommand}"/>
+    </StackPanel>
+</UserControl>

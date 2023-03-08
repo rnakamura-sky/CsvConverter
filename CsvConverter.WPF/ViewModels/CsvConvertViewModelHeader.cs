@@ -1,5 +1,6 @@
 ﻿using CsvConverter.Domain.Entities;
 using Prism.Mvvm;
+using System;
 
 namespace CsvConverter.WPF.ViewModels
 {
@@ -8,10 +9,15 @@ namespace CsvConverter.WPF.ViewModels
     /// </summary>
     public class CsvConvertViewModelHeader : BindableBase
     {
+        ///// <summary>
+        ///// 入力元となったヘッダー情報
+        ///// </summary>
+        //private readonly HeaderEntity _entity;
+
         /// <summary>
-        /// 入力元となったヘッダー情報
+        /// 出力設定項目Entity
         /// </summary>
-        private readonly HeaderEntity _entity;
+        private readonly OutputColumnSettingEntity _entity;
 
         private string _fieldName;
 
@@ -35,15 +41,22 @@ namespace CsvConverter.WPF.ViewModels
             set { SetProperty(ref _isOutput, value); }
         }
 
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="headerEntity"></param>
-        public CsvConvertViewModelHeader(HeaderEntity headerEntity)
+        ///// <summary>
+        ///// コンストラクタ
+        ///// </summary>
+        ///// <param name="headerEntity"></param>
+        //public CsvConvertViewModelHeader(HeaderEntity headerEntity)
+        //{
+        //    _entity = headerEntity;
+        //    FieldName = _entity.Header;
+        //    IsOutput = true;
+        //}
+
+        public CsvConvertViewModelHeader(OutputColumnSettingEntity entity)
         {
-            _entity = headerEntity;
-            FieldName = _entity.Header;
-            IsOutput = true;
+            _entity = entity;
+            FieldName = _entity.OutputHeader;
+            IsOutput = _entity.IsOutput;
         }
 
         /// <summary>
@@ -53,7 +66,21 @@ namespace CsvConverter.WPF.ViewModels
         /// <returns></returns>
         public OutputColumnSettingEntity GetColumnSettingEntity(int index)
         {
-            return new OutputColumnSettingEntity(index, true, FieldName, IsOutput);
+            return new OutputColumnSettingEntity(
+                index,
+                FieldName,
+                true,
+                _entity.InputHeader,
+                IsOutput);
+        }
+
+        /// <summary>
+        /// ヘッダー情報取得
+        /// </summary>
+        /// <returns></returns>
+        public HeaderEntity GetHeader()
+        {
+            return new HeaderEntity(0, FieldName);
         }
     }
 }
