@@ -4,10 +4,16 @@ namespace CsvConverter.Domain.Logics
 {
     public class CsvConvertLogic : ICsvConvertLogic
     {
-        public void Execute(InputCsvFileEntity inputCsvFile, OutputCsvFileEntity outputCsvFile)
+
+        public void Execute(InputCsvFileEntity inputCsvFile, OutputCsvFileEntity outputCsvFile, OutputSettingEntity setting)
         {
             var data = inputCsvFile.GetData();
-            outputCsvFile.WriteData(data);
+
+            var outputSetting = setting != OutputSettingEntity.None ? setting : new OutputSettingEntity(data);
+
+            var outputData = outputSetting.CreateFileData(data);
+
+            outputCsvFile.WriteData(outputData);
         }
     }
 }

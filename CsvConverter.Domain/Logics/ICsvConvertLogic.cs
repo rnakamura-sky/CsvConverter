@@ -4,6 +4,9 @@ namespace CsvConverter.Domain.Logics
 {
     public interface ICsvConvertLogic
     {
-        void Execute(InputCsvFileEntity inputCsvFile, OutputCsvFileEntity outputCsvFile);
+        void Execute(
+            InputCsvFileEntity inputCsvFile,
+            OutputCsvFileEntity outputCsvFile,
+            OutputSettingEntity outputSetting);
     }
 }

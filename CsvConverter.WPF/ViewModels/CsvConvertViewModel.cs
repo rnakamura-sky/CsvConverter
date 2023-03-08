@@ -3,6 +3,7 @@ using CsvConverter.Domain.Logics;
 using CsvConverter.Domain.Repositories;
 using Prism.Commands;
 using Prism.Mvvm;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace CsvConverter.WPF.ViewModels
@@ -25,6 +26,7 @@ namespace CsvConverter.WPF.ViewModels
 
             ExecuteCommand = new DelegateCommand(ExecuteCommandExecute, CanExecuteCommand);
             InputCommand = new DelegateCommand(ExecuteInputCommand, CanInputCommand);
+            ReplaceOutputRowCommand = new DelegateCommand<int?>(ExecuteReplaceOutputRowCommand);
         }
 
         private string _inputCsvFilePath = string.Empty;
@@ -62,17 +64,26 @@ namespace CsvConverter.WPF.ViewModels
             private set => SetProperty(ref _outputRows, value);
         }
 
+        private int _selectedOutputRowIndex;
+        public int SelectedOutputRowIndex
+        {
+            get { return _selectedOutputRowIndex; }
+            set { SetProperty(ref _selectedOutputRowIndex, value); }
+        }
+
         public DelegateCommand ExecuteCommand { get; }
 
         public DelegateCommand InputCommand { get; }
+
+        public DelegateCommand<int?> ReplaceOutputRowCommand { get; }
 
         private void ExecuteCommandExecute()
         {
             var inputCsvFile = new InputCsvFileEntity(_csvFileRepository, InputCsvFilePath);
             var outputCsvFile = new OutputCsvFileEntity(_csvFileRepository, OutputCsvFilePath);
 
-            _logic.Execute(inputCsvFile, outputCsvFile);
-
+            var outputSetting = GetOutputSetting();
+            _logic.Execute(inputCsvFile, outputCsvFile, outputSetting);
         }
 
         private bool CanExecuteCommand()
@@ -99,9 +110,7 @@ namespace CsvConverter.WPF.ViewModels
             {
                 OutputRows.Add(new CsvConvertViewModelHeader(header));
             }
-
         }
-
 
         private bool CanInputCommand()
         {
@@ -110,6 +119,32 @@ namespace CsvConverter.WPF.ViewModels
                 return false;
             }
             return true;
+        }
+
+        private void ExecuteReplaceOutputRowCommand(int? index)
+        {
+            if (index is null)
+            {
+                return;
+            }
+            OutputRows.Move(SelectedOutputRowIndex, index.Value);
+        }
+
+        private OutputSettingEntity GetOutputSetting()
+        {
+            if (OutputRows.Count == 0)
+            {
+                return OutputSettingEntity.None;
+            }
+            var settingRows = new List<OutputRowSettingEntity>();
+            var index = 0;
+            foreach (var row in OutputRows)
+            {
+                settingRows.Add(row.GetRowSettingEntity(index));
+                index++;
+            }
+
+            return new OutputSettingEntity(settingRows);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CsvConverter.Domain.Entities;
 using Prism.Mvvm;
-using System.Collections.ObjectModel;
 
 namespace CsvConverter.WPF.ViewModels
 {
@@ -19,6 +18,11 @@ namespace CsvConverter.WPF.ViewModels
         {
             _entity = headerEntity;
             FieldName = _entity.Header;
+        }
+
+        public OutputRowSettingEntity GetRowSettingEntity(int index)
+        {
+            return new OutputRowSettingEntity(index, true, FieldName, true);
         }
     }
 }

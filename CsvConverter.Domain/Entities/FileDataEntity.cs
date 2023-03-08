@@ -2,7 +2,6 @@
 {
     public sealed class FileDataEntity
     {
-        public string FileString { get; }
 
         public IReadOnlyList<HeaderEntity> Headers { get; }
 
@@ -11,18 +10,24 @@
         public bool HasHeader { get; }
 
         public FileDataEntity()
+            : this(new List<HeaderEntity>(), new List<RowEntity>())
         {
-            Headers = new List<HeaderEntity>();
-            Data = new List<RowEntity>();
-            FileString= string.Empty;
+        }
+
+        public FileDataEntity(IReadOnlyList<HeaderEntity> headers, IReadOnlyList<RowEntity> data)
+        {
+            ////TODO:それぞれのコンストラクタで設定しているため、共通化が必要
+            HasHeader = true;
+
+            Headers = headers;
+            Data = data;
         }
 
         public FileDataEntity(string fileString)
         {
             HasHeader = true;
-            FileString = fileString;
 
-            var rowStrings = FileString.Split(Environment.NewLine);
+            var rowStrings = fileString.Split(Environment.NewLine);
             var isHeader = true;
             Headers = new List<HeaderEntity>();
 

@@ -8,5 +8,11 @@
         {
             Fields = fields;
         }
+
+        public FieldEntity GetField(string header)
+        {
+            var field = Fields.Where(x => x.Header.Header == header).FirstOrDefault();
+            return field ?? FieldEntity.None;
+        }
     }
 }

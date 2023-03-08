@@ -82,7 +82,7 @@ a,b,c,d,e
 
 
             var logic = new CsvConvertLogic();
-            logic.Execute(inputCsvFile, outputCsvFile);
+            logic.Execute(inputCsvFile, outputCsvFile, OutputSettingEntity.None);
 
 
             inputCsvFileMock.VerifyAll();
