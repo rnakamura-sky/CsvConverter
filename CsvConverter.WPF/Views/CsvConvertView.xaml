@@ -64,11 +64,19 @@
                     <i:Interaction.Behaviors>
                         <behaviors:DragReplaceItemBehavior Callback="{Binding ReplaceOutputColumnCommand}"/>
                     </i:Interaction.Behaviors>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding FieldName}"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="項目名" DisplayMemberBinding="{Binding FieldName}"/>
+                            <GridViewColumn Header="出力">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Margin="5,0"
+                                                  IsChecked="{Binding IsOutput}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
                 </ListView>
             </StackPanel>
         </StackPanel>

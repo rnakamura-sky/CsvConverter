@@ -4,10 +4,11 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace CsvConverter.WPF.Views.Behaviors
 {
-    public class DragReplaceItemBehavior : Behavior<ItemsControl>
+    public class DragReplaceItemBehavior : Behavior<ListView>
     {
         private DragDropObject _dragDropObject = null;
 
@@ -53,8 +54,14 @@ namespace CsvConverter.WPF.Views.Behaviors
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var control = sender as FrameworkElement;
+
             var startPosition = e.GetPosition(Window.GetWindow(control));
             var draggedItem = GetTemplatedRootElement(e.OriginalSource as FrameworkElement);
+
+            if (draggedItem is null)
+            {
+                return;
+            }
             _dragDropObject = new DragDropObject(startPosition, draggedItem);
         }
 
@@ -128,14 +135,29 @@ namespace CsvConverter.WPF.Views.Behaviors
         }
 
 
+        /// <summary>
+        /// ListViewItemを取得
+        /// CheckBoxの場合は個別にクリック操作を行うため、nullを返す
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         private static FrameworkElement GetTemplatedRootElement(FrameworkElement element)
         {
-            var parent = element.TemplatedParent as FrameworkElement;
-            while (parent.TemplatedParent != null)
+            var parent = VisualTreeHelper.GetParent(element);
+            while (parent != null)
             {
-                parent = parent.TemplatedParent as FrameworkElement;
+                if (parent.GetType() == typeof(ListViewItem))
+                {
+                    return parent as FrameworkElement;
+                }
+
+                if (parent.GetType() == typeof(CheckBox))
+                {
+                    return null as FrameworkElement;
+                }
+                parent = VisualTreeHelper.GetParent(parent);
             }
-            return parent;
+            return parent as FrameworkElement;
         }
 
     }

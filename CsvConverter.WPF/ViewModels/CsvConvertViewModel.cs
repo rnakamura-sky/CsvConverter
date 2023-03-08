@@ -202,7 +202,7 @@ namespace CsvConverter.WPF.ViewModels
             var index = 0;
             foreach (var row in OutputColumns)
             {
-                settingColumns.Add(row.GetRowSettingEntity(index));
+                settingColumns.Add(row.GetColumnSettingEntity(index));
                 index++;
             }
 
