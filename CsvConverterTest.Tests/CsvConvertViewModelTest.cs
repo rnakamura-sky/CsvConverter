@@ -67,7 +67,10 @@ a,b,c
             Assert.AreEqual(true, viewModel.InputCommand.CanExecute());
 
             viewModel.InputCommand.Execute();
-            Assert.AreEqual(2, viewModel.OutputRows.Count);
+            Assert.AreEqual(3, viewModel.OutputRows.Count);
+            Assert.AreEqual("Field1", viewModel.OutputRows[0].FieldName);
+            Assert.AreEqual("Field2", viewModel.OutputRows[1].FieldName);
+            Assert.AreEqual("Field3", viewModel.OutputRows[2].FieldName);
 
             viewModel.OutputCsvFilePath = "OutputCsvFilePath";
 
