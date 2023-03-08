@@ -3,9 +3,7 @@ using CsvConverter.Domain.Logics;
 using CsvConverter.Domain.Repositories;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
 using System.Collections.ObjectModel;
-using System.Data;
 
 namespace CsvConverter.WPF.ViewModels
 {
@@ -24,8 +22,6 @@ namespace CsvConverter.WPF.ViewModels
         {
             _logic = logic;
             _csvFileRepository = csvFileRepository;
-
-            OutputRows = new DataView();
 
             ExecuteCommand = new DelegateCommand(ExecuteCommandExecute, CanExecuteCommand);
             InputCommand = new DelegateCommand(ExecuteInputCommand, CanInputCommand);
@@ -58,10 +54,10 @@ namespace CsvConverter.WPF.ViewModels
             }
         }
 
-        private DataView _outputRows;
+        private ObservableCollection<CsvConvertViewModelHeader> _outputRows = new();
 
         
-        public DataView OutputRows {
+        public ObservableCollection<CsvConvertViewModelHeader> OutputRows {
             get => _outputRows;
             private set => SetProperty(ref _outputRows, value);
         }
@@ -98,23 +94,12 @@ namespace CsvConverter.WPF.ViewModels
             var inputCsvFile = new InputCsvFileEntity(_csvFileRepository, InputCsvFilePath);
             var fileData = inputCsvFile.GetData();
 
-            var outputRows = new DataTable();
+            OutputRows.Clear();
             foreach (var header in fileData.Headers)
             {
-                outputRows.Columns.Add(header.Header);
+                OutputRows.Add(new CsvConvertViewModelHeader(header));
             }
 
-            foreach (var rowData in fileData.Data)
-            {
-                var dataRow = outputRows.NewRow();
-                foreach (var fieldData in rowData.Fields)
-                {
-                    dataRow[fieldData.Header.Header] = fieldData.Data;
-                }
-                outputRows.Rows.Add(dataRow);
-            }
-
-            OutputRows = new DataView(outputRows);
         }
 
 

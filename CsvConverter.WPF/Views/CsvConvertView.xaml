@@ -57,14 +57,14 @@
             </StackPanel>
 
             <StackPanel>
-                <DataGrid Height="100"
-                          CanUserAddRows="False"
-                          CanUserDeleteRows="False"
+                <ListView Height="100"
                           ItemsSource="{Binding OutputRows}">
-                    <DataGrid.Columns>
-                        
-                    </DataGrid.Columns>
-                </DataGrid>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding FieldName}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackPanel>
         </StackPanel>
     </DockPanel>
