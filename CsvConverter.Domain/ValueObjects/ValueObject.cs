@@ -32,7 +32,7 @@
             return GetHashCodeCore();
         }
 
-        protected abstract bool EqualsCore(T vo);
+        protected abstract bool EqualsCore(T other);
 
         protected abstract int GetHashCodeCore();
 

@@ -11,16 +11,6 @@
         public int Index { get; }
 
         /// <summary>
-        /// 入力ファイルの項目かのチェック
-        /// </summary>
-        public bool IsInputField { get; }
-
-        /// <summary>
-        /// 入力ファイルの場合の入力ファイルヘッダー名
-        /// </summary>
-        public string InputHeader { get; }
-
-        /// <summary>
         /// 出力有無フラグ
         /// </summary>
         public bool IsOutput { get; }
@@ -31,19 +21,33 @@
         public string OutputHeader { get; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public BaseTargetSettingEntity TargetSetting { get; }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="index">インデックス</param>
-        /// <param name="isInputField">入力ファイル項目かのチェック</param>
-        /// <param name="inputHeader">入力ファイル項目でのヘッダー名</param>
-        /// <param name="isOutput">出力有無フラグ</param>
-        public OutputColumnSettingEntity(int index, string outputHeader, bool isInputField, string inputHeader, bool isOutput)
+        /// <param name="index"></param>
+        /// <param name="outputHeader"></param>
+        /// <param name="isOutput"></param>
+        /// <param name="targetSettingEntity"></param>
+        public OutputColumnSettingEntity(int index, string outputHeader, bool isOutput, BaseTargetSettingEntity targetSettingEntity)
         {
             Index = index;
             OutputHeader = outputHeader;
-            IsInputField = isInputField;
-            InputHeader = inputHeader;
             IsOutput = isOutput;
+            TargetSetting = targetSettingEntity;
+        }
+
+        /// <summary>
+        /// 項目の値を生成
+        /// </summary>
+        /// <param name="rowEntity">入力データ</param>
+        /// <returns></returns>
+        public string CreateFieldValue(RowEntity rowEntity)
+        {
+            return TargetSetting.CreateFieldValue(rowEntity);
         }
     }
 }

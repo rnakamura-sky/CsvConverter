@@ -52,7 +52,7 @@ namespace CsvConverter.WPF.ViewModels
         private void ExecuteCreateCommand()
         {
             var column = new OutputColumnSettingEntity(
-                0, HeaderName, IsInputHeader, SelectedInputHeader.Header, IsOutput);
+                0, HeaderName, IsOutput, new InputTargetSettingEntity(SelectedInputHeader.Header));
             var parameters = new DialogParameters()
             {
                 {nameof(OutputColumnSettingEntity), column},
@@ -91,6 +91,5 @@ namespace CsvConverter.WPF.ViewModels
             get { return _headers; }
             set { SetProperty(ref _headers, value); }
         }
-
     }
 }

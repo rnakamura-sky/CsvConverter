@@ -38,8 +38,7 @@
                                         index,
                                         header.Header,
                                         true,
-                                        header.Header,
-                                        true));
+                                        new InputTargetSettingEntity(header.Header)));
                 index++;
             }
             ColumnSettings = rowSettings;
@@ -48,10 +47,10 @@
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="rowSettings">行設定</param>
-        public OutputSettingEntity(IReadOnlyList<OutputColumnSettingEntity> rowSettings)
+        /// <param name="columnSettings">列設定</param>
+        public OutputSettingEntity(IReadOnlyList<OutputColumnSettingEntity> columnSettings)
         {
-            ColumnSettings = rowSettings;
+            ColumnSettings = columnSettings;
         }
 
         /// <summary>
@@ -62,6 +61,8 @@
         /// <returns>出力ファイル情報</returns>
         public FileDataEntity CreateFileData(FileDataEntity data)
         {
+            var inputHeaders = data.Headers;
+
             var headers = new List<HeaderEntity>();
             int index = 0;
 
@@ -84,7 +85,7 @@
                     var outputHeader = headers[index];
                     var outputRowSetting = outputRowSettings[index];
 
-                    var fieldValue = row.GetField(outputRowSetting.InputHeader).Data;
+                    var fieldValue = outputRowSetting.CreateFieldValue(row);
                     outputData.Add(new FieldEntity(outputHeader, fieldValue));
                 }
                 outputRowList.Add(new RowEntity(outputData));

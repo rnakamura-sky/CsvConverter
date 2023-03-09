@@ -19,7 +19,7 @@
         /// <summary>
         /// 値
         /// </summary>
-        public string Data { get; }
+        public string FieldValue { get; }
 
         /// <summary>
         /// コンストラクタ
@@ -29,7 +29,7 @@
         public FieldEntity(HeaderEntity header, string data)
         {
             Header = header;
-            Data = data;
+            FieldValue = data;
         }
     }
 }

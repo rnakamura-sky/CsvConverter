@@ -223,7 +223,7 @@ a,b,c,b
                     Assert.AreEqual("Field2", headers[1].Header);
                     Assert.AreEqual("Field3", headers[2].Header);
 
-                    var columnSetting = new OutputColumnSettingEntity(0, "Field4", false, "Field2", true);
+                    var columnSetting = new OutputColumnSettingEntity(0, "Field4", true, new InputTargetSettingEntity("Field2"));
                     var resultParameters = new DialogParameters();
                     resultParameters.Add(nameof(OutputColumnSettingEntity), columnSetting);
                     var dialogResult = new DialogResult(ButtonResult.OK, resultParameters);

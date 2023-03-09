@@ -26,8 +26,7 @@ namespace CsvConverterTest.Tests
                 var column = result.Parameters.GetValue<OutputColumnSettingEntity>(nameof(OutputColumnSettingEntity));
                 Assert.IsNotNull(column);
                 Assert.AreEqual("Field4", column.OutputHeader);
-                Assert.AreEqual("Field2", column.InputHeader);
-                Assert.AreEqual(false, column.IsInputField);
+                Assert.AreEqual("Field2", ((InputTargetSettingEntity)column.TargetSetting).InputHeaderName);
                 Assert.AreEqual(true, column.IsOutput);
             };
 

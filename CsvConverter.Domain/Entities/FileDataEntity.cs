@@ -123,11 +123,11 @@
                 {
                     if (isFirst)
                     {
-                        result += field.Data;
+                        result += field.FieldValue;
                         isFirst = false;
                         continue;
                     }
-                    result += "," + field.Data;
+                    result += "," + field.FieldValue;
                 }
                 result += Environment.NewLine;
             }

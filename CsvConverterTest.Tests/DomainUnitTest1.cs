@@ -43,17 +43,17 @@ a,b,c,d,e
             Assert.AreEqual("Field5", data.Headers[4].Header);
             Assert.AreEqual(2, data.Data.Count);
             Assert.AreEqual(5, data.Data[0].Fields.Count);
-            Assert.AreEqual("A", data.Data[0].Fields[0].Data);
-            Assert.AreEqual("B", data.Data[0].Fields[1].Data);
-            Assert.AreEqual("C", data.Data[0].Fields[2].Data);
-            Assert.AreEqual("D", data.Data[0].Fields[3].Data);
-            Assert.AreEqual("E", data.Data[0].Fields[4].Data);
+            Assert.AreEqual("A", data.Data[0].Fields[0].FieldValue);
+            Assert.AreEqual("B", data.Data[0].Fields[1].FieldValue);
+            Assert.AreEqual("C", data.Data[0].Fields[2].FieldValue);
+            Assert.AreEqual("D", data.Data[0].Fields[3].FieldValue);
+            Assert.AreEqual("E", data.Data[0].Fields[4].FieldValue);
             Assert.AreEqual(5, data.Data[1].Fields.Count);
-            Assert.AreEqual("a", data.Data[1].Fields[0].Data);
-            Assert.AreEqual("b", data.Data[1].Fields[1].Data);
-            Assert.AreEqual("c", data.Data[1].Fields[2].Data);
-            Assert.AreEqual("d", data.Data[1].Fields[3].Data);
-            Assert.AreEqual("e", data.Data[1].Fields[4].Data);
+            Assert.AreEqual("a", data.Data[1].Fields[0].FieldValue);
+            Assert.AreEqual("b", data.Data[1].Fields[1].FieldValue);
+            Assert.AreEqual("c", data.Data[1].Fields[2].FieldValue);
+            Assert.AreEqual("d", data.Data[1].Fields[3].FieldValue);
+            Assert.AreEqual("e", data.Data[1].Fields[4].FieldValue);
             Assert.AreEqual(inputFileString, data.GetFileString());
 
             var outputCsvFile = new OutputCsvFileEntity(outputCsvFileMock.Object, "OutputFilePath");
@@ -66,7 +66,7 @@ a,b,c,d,e
         }
 
         [TestMethod]
-        public void ロジックのテスト()
+        public void そのまま出力シナリオ()
         {
             var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
             inputCsvFileMock.Setup(x => x.GetData(It.IsAny<string>())).Returns("SampleData");
@@ -89,5 +89,84 @@ a,b,c,d,e
             outputCsvFileMock.VerifyAll();
 
         }
+
+        [TestMethod]
+        public void 簡単なCSVそのまま出力シナリオ()
+        {
+            var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
+            var inputFileContent =
+@"Field1,Field2,Field3
+a,b,c
+C,A,B
+う,あ,い
+";
+            inputCsvFileMock.Setup(x => x.GetData(It.IsAny<string>())).Returns(inputFileContent);
+            var outputCsvFileMock = new Mock<IOutputCsvFileRepository>();
+            outputCsvFileMock.Setup(x => x.WriteData("OutputFilePath", It.IsAny<string>())).Callback((string filePath, string data) =>
+            {
+                Assert.AreEqual("OutputFilePath", filePath);
+                var resultContent =
+@"Field1,Field2,Field3
+a,b,c
+C,A,B
+う,あ,い
+";
+                Assert.AreEqual(resultContent, data);
+            });
+
+            var inputCsvFile = new InputCsvFileEntity(inputCsvFileMock.Object, "InputFilePath");
+            var outputCsvFile = new OutputCsvFileEntity(outputCsvFileMock.Object, "OutputFilePath");
+
+
+            var logic = new CsvConvertLogic();
+            logic.Execute(inputCsvFile, outputCsvFile, OutputSettingEntity.None);
+
+
+            inputCsvFileMock.VerifyAll();
+            outputCsvFileMock.VerifyAll();
+        }
+
+        [TestMethod]
+        public void 自分で項目作成シナリオ()
+        {
+            var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
+            var inputFileContent =
+@"Field1,Field2,Field3
+a,b,c
+C,A,B
+う,あ,い
+";
+            inputCsvFileMock.Setup(x => x.GetData(It.IsAny<string>())).Returns(inputFileContent);
+            var outputCsvFileMock = new Mock<IOutputCsvFileRepository>();
+            outputCsvFileMock.Setup(x => x.WriteData("OutputFilePath", It.IsAny<string>())).Callback((string filePath, string data) =>
+            {
+                Assert.AreEqual("OutputFilePath", filePath);
+                var resultContent =
+@"OutputField1,OutputField2,OutputField3
+a,b,c
+C,A,B
+う,あ,い
+";
+                Assert.AreEqual(resultContent, data);
+            });
+
+            var inputCsvFile = new InputCsvFileEntity(inputCsvFileMock.Object, "InputFilePath");
+            var outputCsvFile = new OutputCsvFileEntity(outputCsvFileMock.Object, "OutputFilePath");
+
+            var outputSetting = new OutputSettingEntity(new List<OutputColumnSettingEntity>()
+            {
+                new OutputColumnSettingEntity(0, "OutputField1", true, new InputTargetSettingEntity("Field1")),
+                new OutputColumnSettingEntity(1, "OutputField2", true, new InputTargetSettingEntity("Field2")),
+                new OutputColumnSettingEntity(2, "OutputField3", true, new InputTargetSettingEntity("Field3")),
+            });
+
+            var logic = new CsvConvertLogic();
+            logic.Execute(inputCsvFile, outputCsvFile, outputSetting);
+
+
+            inputCsvFileMock.VerifyAll();
+            outputCsvFileMock.VerifyAll();
+        }
+
     }
 }

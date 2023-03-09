@@ -1,6 +1,5 @@
 ﻿using CsvConverter.Domain.Entities;
 using Prism.Mvvm;
-using System;
 
 namespace CsvConverter.WPF.ViewModels
 {
@@ -9,11 +8,6 @@ namespace CsvConverter.WPF.ViewModels
     /// </summary>
     public class CsvConvertViewModelHeader : BindableBase
     {
-        ///// <summary>
-        ///// 入力元となったヘッダー情報
-        ///// </summary>
-        //private readonly HeaderEntity _entity;
-
         /// <summary>
         /// 出力設定項目Entity
         /// </summary>
@@ -41,17 +35,6 @@ namespace CsvConverter.WPF.ViewModels
             set { SetProperty(ref _isOutput, value); }
         }
 
-        ///// <summary>
-        ///// コンストラクタ
-        ///// </summary>
-        ///// <param name="headerEntity"></param>
-        //public CsvConvertViewModelHeader(HeaderEntity headerEntity)
-        //{
-        //    _entity = headerEntity;
-        //    FieldName = _entity.Header;
-        //    IsOutput = true;
-        //}
-
         public CsvConvertViewModelHeader(OutputColumnSettingEntity entity)
         {
             _entity = entity;
@@ -69,9 +52,8 @@ namespace CsvConverter.WPF.ViewModels
             return new OutputColumnSettingEntity(
                 index,
                 FieldName,
-                true,
-                _entity.InputHeader,
-                IsOutput);
+                IsOutput,
+                new InputTargetSettingEntity(((InputTargetSettingEntity)_entity.TargetSetting).InputHeaderName));
         }
 
         /// <summary>
