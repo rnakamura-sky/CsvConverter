@@ -7,6 +7,7 @@
     {
         public static readonly TargetSettingType None = new(0, "None", "(なし)");
         public static readonly TargetSettingType Input = new(1, "Input", "入力項目");
+        public static readonly TargetSettingType Concatenate = new(2, "Concatenate", "結合");
 
         /// <summary>
         /// 値
@@ -45,6 +46,7 @@
         {
             return new List<TargetSettingType>() {
                 Input,
+                Concatenate,
             };
         }
 

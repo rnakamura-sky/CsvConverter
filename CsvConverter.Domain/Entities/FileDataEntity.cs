@@ -108,11 +108,11 @@
                 {
                     if (isFirst)
                     {
-                        result += header.Header;
+                        result += header.HeaderName;
                         isFirst = false;
                         continue;
                     }
-                    result += "," + header.Header;
+                    result += "," + header.HeaderName;
                 }
                 result += Environment.NewLine;
             }

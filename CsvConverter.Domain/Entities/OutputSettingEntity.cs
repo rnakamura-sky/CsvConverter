@@ -36,9 +36,9 @@
             {
                 rowSettings.Add(new OutputColumnSettingEntity(
                                         index,
-                                        header.Header,
+                                        header.HeaderName,
                                         true,
-                                        new InputTargetSettingEntity(header.Header)));
+                                        new InputTargetSettingEntity(header.HeaderName)));
                 index++;
             }
             ColumnSettings = rowSettings;

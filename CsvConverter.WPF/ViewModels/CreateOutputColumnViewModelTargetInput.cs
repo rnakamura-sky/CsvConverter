@@ -34,7 +34,7 @@ namespace CsvConverter.WPF.ViewModels
 
         public override BaseTargetSettingEntity GetTargetSettingEntity()
         {
-            return new InputTargetSettingEntity(SelectedHeader.Header);
+            return new InputTargetSettingEntity(SelectedHeader.HeaderName);
         }
     }
 }

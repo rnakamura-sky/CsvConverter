@@ -63,7 +63,11 @@ namespace CsvConverter.WPF.ViewModels
                     }
                     if (value == TargetSettingType.Input)
                     {
-                        Target = new CreateOutputColumnViewModelTargetInput(Headers);
+                        Target = new CreateOutputColumnViewModelTargetInput(InputHeaders);
+                    }
+                    if (value == TargetSettingType.Concatenate)
+                    {
+                        Target = new CreateOutputColumnViewModelTargetConcatenate(OutputHeaders);
                     }
                 }
             }
@@ -106,19 +110,32 @@ namespace CsvConverter.WPF.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            var headers = parameters.GetValue<IReadOnlyList<HeaderEntity>>(nameof(Headers));
-            foreach (var header in headers)
+            var inputHeaders = parameters.GetValue<IReadOnlyList<HeaderEntity>>(nameof(InputHeaders));
+            foreach (var header in inputHeaders)
             {
-                Headers.Add(header);
+                InputHeaders.Add(header);
+            }
+            var outputHeaders = parameters.GetValue<IReadOnlyList<HeaderEntity>>(nameof(OutputHeaders));
+            foreach (var header in outputHeaders)
+            {
+                OutputHeaders.Add(header);
             }
         }
 
-        private ObservableCollection<HeaderEntity> _headers = new();
+        private ObservableCollection<HeaderEntity> _inputHeaders = new();
 
-        public ObservableCollection<HeaderEntity> Headers
+        public ObservableCollection<HeaderEntity> InputHeaders
         {
-            get { return _headers; }
-            set { SetProperty(ref _headers, value); }
+            get { return _inputHeaders; }
+            set { SetProperty(ref _inputHeaders, value); }
+        }
+
+        private ObservableCollection<HeaderEntity> _outputHeaders = new();
+
+        public ObservableCollection<HeaderEntity> OutputHeaders
+        {
+            get { return _outputHeaders; }
+            set { SetProperty(ref _outputHeaders, value); }
         }
     }
 }

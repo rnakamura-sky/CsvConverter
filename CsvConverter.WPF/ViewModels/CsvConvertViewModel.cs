@@ -6,7 +6,6 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Media.Animation;
 
 namespace CsvConverter.WPF.ViewModels
 {
@@ -89,6 +88,17 @@ namespace CsvConverter.WPF.ViewModels
             }
         }
 
+        private ObservableCollection<HeaderEntity> _inputHeaders = new();
+        
+        /// <summary>
+        /// 入力項目リスト
+        /// </summary>
+        public ObservableCollection<HeaderEntity> InputHeaders
+        {
+            get => _inputHeaders;
+            set => SetProperty(ref _inputHeaders, value);
+        }
+
         private ObservableCollection<CsvConvertViewModelHeader> _outputColumns = new();
 
         /// <summary>
@@ -165,6 +175,13 @@ namespace CsvConverter.WPF.ViewModels
         {
             var inputCsvFile = new InputCsvFileEntity(_csvFileRepository, InputCsvFilePath);
             var fileData = inputCsvFile.GetData();
+
+            InputHeaders.Clear();
+            foreach(var header in fileData.Headers)
+            {
+                InputHeaders.Add(header);
+            }
+
             var outputSetting = new OutputSettingEntity(fileData);
 
             OutputColumns.Clear();
@@ -226,14 +243,20 @@ namespace CsvConverter.WPF.ViewModels
         /// </summary>
         private void ExecuteCreateCommand()
         {
-            var headers = new List<HeaderEntity>();
+            var inputHeaders = new List<HeaderEntity>();
+            foreach(var header in InputHeaders)
+            {
+                inputHeaders.Add(header);
+            }
+            var outputHeaders = new List<HeaderEntity>();
             foreach(var column in OutputColumns)
             {
-                headers.Add(column.GetHeader());
+                outputHeaders.Add(column.GetHeader());
             }
 
             var parameters = new DialogParameters();
-            parameters.Add(nameof(CreateOutputColumnViewModel.Headers), headers);
+            parameters.Add(nameof(CreateOutputColumnViewModel.InputHeaders), inputHeaders);
+            parameters.Add(nameof(CreateOutputColumnViewModel.OutputHeaders), outputHeaders);
             _dialogService.ShowDialog(
                 nameof(Views.CreateOutputColumnView),
                 parameters,

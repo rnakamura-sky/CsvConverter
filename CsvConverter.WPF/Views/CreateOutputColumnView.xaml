@@ -13,8 +13,24 @@
                           SelectedItem="{Binding SelectedHeader}"/>
             </StackPanel>
         </DataTemplate>
+        <DataTemplate x:Key="ConcatenateDataTemplate">
+            <StackPanel>
+                <Label Content="結合項目設定"/>
+                <ComboBox ItemsSource="{Binding Headers}"
+                          DisplayMemberPath="HeaderName"
+                          SelectedItem="{Binding SelectedHeader}"/>
+                <Button Content="追加"
+                        Command="{Binding SelectCommand}"/>
+                <ListBox ItemsSource="{Binding ConcatenateHeaders}"
+                         DisplayMemberPath="HeaderName"
+                         SelectedItem="{Binding SelectedConcatenateHeader}"/>
+                <Button Content="削除"
+                        Command="{Binding DeleteCommand}"/>
+            </StackPanel>
+        </DataTemplate>
         <selectors:TargetSettingDataTemplateSelector x:Key="TargetSettingSelector"
-                                                     InputTargetDataTemplate="{StaticResource InputDataTemplate}"/>
+                                                     InputTargetDataTemplate="{StaticResource InputDataTemplate}"
+                                                     ConcatenateTargetDataTemplate="{StaticResource ConcatenateDataTemplate}"/>
     </UserControl.Resources>
     <StackPanel>
         <TextBox Text="{Binding HeaderName}"/>

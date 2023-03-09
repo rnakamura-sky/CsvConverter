@@ -26,7 +26,7 @@
         /// <returns>項目情報Entity</returns>
         public FieldEntity GetField(string header)
         {
-            var field = Fields.Where(x => x.Header.Header == header).FirstOrDefault();
+            var field = Fields.Where(x => x.Header.HeaderName == header).FirstOrDefault();
             return field ?? FieldEntity.None;
         }
     }

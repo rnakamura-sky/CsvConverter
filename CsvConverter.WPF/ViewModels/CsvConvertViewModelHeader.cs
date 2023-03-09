@@ -53,7 +53,7 @@ namespace CsvConverter.WPF.ViewModels
                 index,
                 FieldName,
                 IsOutput,
-                new InputTargetSettingEntity(((InputTargetSettingEntity)_entity.TargetSetting).InputHeaderName));
+                _entity.TargetSetting);
         }
 
         /// <summary>

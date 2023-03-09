@@ -13,22 +13,22 @@
         /// <summary>
         /// Id ヘッダーの項番を表す
         /// </summary>
-        public int Id { get; }
+        public int HeaderId { get; }
 
         /// <summary>
         /// ヘッダー名
         /// </summary>
-        public string Header { get; }
+        public string HeaderName { get; }
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="id">項番</param>
         /// <param name="header">ヘッダー名</param>
-        public HeaderEntity(int id, string header)
+        public HeaderEntity(int headerId, string headerName)
         {
-            Id = id;
-            Header = header;
+            HeaderId = headerId;
+            HeaderName = headerName;
         }   
     }
 }
