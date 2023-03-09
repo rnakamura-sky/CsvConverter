@@ -1,6 +1,7 @@
 ﻿using CsvConverter.Domain.Entities;
 using CsvConverter.Domain.Logics;
 using CsvConverter.Domain.Repositories;
+using CsvConverter.WPF.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -15,6 +16,7 @@ namespace CsvConverter.WPF.ViewModels
     public class CsvConvertViewModel : BindableBase
     {
         private readonly IDialogService _dialogService;
+        private readonly IMessageService _messageService;
 
         /// <summary>
         /// 出力ファイル作成ロジック
@@ -31,7 +33,7 @@ namespace CsvConverter.WPF.ViewModels
         /// コンストラクタ
         /// </summary>
         public CsvConvertViewModel(IDialogService dialogService)
-            : this(dialogService, new CsvConvertLogic(), new CsvFileAccess())
+            : this(dialogService, new MessageService(), new CsvConvertLogic(), new CsvFileAccess())
         {
 
         }
@@ -41,9 +43,14 @@ namespace CsvConverter.WPF.ViewModels
         /// </summary>
         /// <param name="logic">出力ファイル作成ロジック</param>
         /// <param name="csvFileRepository">CSVファイルリポジトリ</param>
-        public CsvConvertViewModel(IDialogService dialogService, ICsvConvertLogic logic, ICsvFileRepository csvFileRepository)
+        public CsvConvertViewModel(
+            IDialogService dialogService,
+            IMessageService messageService,
+            ICsvConvertLogic logic,
+            ICsvFileRepository csvFileRepository)
         {
             _dialogService = dialogService;
+            _messageService = messageService;
             _logic = logic;
             _csvFileRepository = csvFileRepository;
 
@@ -149,6 +156,8 @@ namespace CsvConverter.WPF.ViewModels
 
             var outputSetting = GetOutputSetting();
             _logic.Execute(inputCsvFile, outputCsvFile, outputSetting);
+
+            _messageService.ShowDialog("出力が完了しました");
         }
 
         /// <summary>

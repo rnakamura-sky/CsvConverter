@@ -1,6 +1,7 @@
 ﻿using CsvConverter.Domain.Entities;
 using CsvConverter.Domain.Logics;
 using CsvConverter.Domain.Repositories;
+using CsvConverter.WPF.Services;
 using CsvConverter.WPF.ViewModels;
 using Moq;
 using Prism.Services.Dialogs;
@@ -14,6 +15,7 @@ namespace CsvConverterTest.Tests
         public void 入力ファイルと出力ファイルを指定してそのまま出力するシナリオ()
         {
             var dialogServiceMock = new Mock<IDialogService>();
+            var messageServiceMock = new Mock<IMessageService>();
             var logicMock = new Mock<ICsvConvertLogic>();
             logicMock.Setup(x => x.Execute(It.IsAny<InputCsvFileEntity>(), It.IsAny<OutputCsvFileEntity>(), It.IsAny<OutputSettingEntity>()))
                 .Callback((InputCsvFileEntity inputFile, OutputCsvFileEntity outputFile, OutputSettingEntity setting) =>
@@ -22,7 +24,11 @@ namespace CsvConverterTest.Tests
                     Assert.AreEqual("OutputCsvFilePath", outputFile.CsvFilePath);
                 });
             var csvFileMock = new Mock<ICsvFileRepository>();
-            var viewModel = new CsvConvertViewModel(dialogServiceMock.Object, logicMock.Object, csvFileMock.Object);
+            var viewModel = new CsvConvertViewModel(
+                dialogServiceMock.Object,
+                messageServiceMock.Object,
+                logicMock.Object,
+                csvFileMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -74,7 +80,12 @@ b,c,a
                 });
 
             var dialogServiceMock = new Mock<IDialogService>();
-            var viewModel = new CsvConvertViewModel(dialogServiceMock.Object, logicMock.Object, csvFileMock.Object);
+            var messageServiceMock = new Mock<IMessageService>();
+            var viewModel = new CsvConvertViewModel(
+                dialogServiceMock.Object,
+                messageServiceMock.Object,
+                logicMock.Object,
+                csvFileMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -141,7 +152,12 @@ a,c
 
                 });
             var dialogServiceMock = new Mock<IDialogService>();
-            var viewModel = new CsvConvertViewModel(dialogServiceMock.Object, logicMock.Object, csvFileMock.Object);
+            var messageServiceMock = new Mock<IMessageService>();
+            var viewModel = new CsvConvertViewModel(
+                dialogServiceMock.Object,
+                messageServiceMock.Object,
+                logicMock.Object,
+                csvFileMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -229,7 +245,11 @@ a,b,c,b
                     var dialogResult = new DialogResult(ButtonResult.OK, resultParameters);
                     callback?.Invoke(dialogResult);
                 });
-            var viewModel = new CsvConvertViewModel(dialogServiceMock.Object, logicMock.Object, csvFileMock.Object);
+            var messageServiceMock = new Mock<IMessageService>();
+            var viewModel = new CsvConvertViewModel(
+                dialogServiceMock.Object,
+                messageServiceMock.Object,
+                logicMock.Object, csvFileMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -327,7 +347,12 @@ a,b,c,abc
                     var dialogResult = new DialogResult(ButtonResult.OK, resultParameters);
                     callback?.Invoke(dialogResult);
                 });
-            var viewModel = new CsvConvertViewModel(dialogServiceMock.Object, logicMock.Object, csvFileMock.Object);
+            var messageServiceMock = new Mock<IMessageService>();
+            var viewModel = new CsvConvertViewModel(
+                dialogServiceMock.Object,
+                messageServiceMock.Object, 
+                logicMock.Object,
+                csvFileMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
