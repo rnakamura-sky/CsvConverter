@@ -17,6 +17,7 @@ namespace CsvConverter.WPF.ViewModels
     {
         private readonly IDialogService _dialogService;
         private readonly IMessageService _messageService;
+        private readonly ICommonDialogService _commonDialogService;
 
         /// <summary>
         /// 出力ファイル作成ロジック
@@ -33,7 +34,12 @@ namespace CsvConverter.WPF.ViewModels
         /// コンストラクタ
         /// </summary>
         public CsvConvertViewModel(IDialogService dialogService)
-            : this(dialogService, new MessageService(), new CsvConvertLogic(), new CsvFileAccess())
+            : this(
+                  dialogService,
+                  new MessageService(),
+                  new FileDialogService(),
+                  new CsvConvertLogic(),
+                  new CsvFileAccess())
         {
 
         }
@@ -46,11 +52,13 @@ namespace CsvConverter.WPF.ViewModels
         public CsvConvertViewModel(
             IDialogService dialogService,
             IMessageService messageService,
+            ICommonDialogService commonDialogService,
             ICsvConvertLogic logic,
             ICsvFileRepository csvFileRepository)
         {
             _dialogService = dialogService;
             _messageService = messageService;
+            _commonDialogService = commonDialogService;
             _logic = logic;
             _csvFileRepository = csvFileRepository;
 
@@ -58,6 +66,9 @@ namespace CsvConverter.WPF.ViewModels
             InputCommand = new DelegateCommand(ExecuteInputCommand, CanInputCommand);
             ReplaceOutputColumnCommand = new DelegateCommand<int?>(ExecuteReplaceOutputColumnCommand);
             CreateCommand = new DelegateCommand(ExecuteCreateCommand);
+
+            SelectInputFileCommand = new DelegateCommand(ExecuteSelectInputFileCommand);
+            SelectOutputFileCommand = new DelegateCommand(ExecuteSelectOutputFileCommand);
         }
 
         private string _inputCsvFilePath = string.Empty;
@@ -145,6 +156,9 @@ namespace CsvConverter.WPF.ViewModels
         /// 新出力項目作成コマンド
         /// </summary>
         public DelegateCommand CreateCommand { get; }
+
+        public DelegateCommand SelectInputFileCommand { get; }
+        public DelegateCommand SelectOutputFileCommand { get; }
 
         /// <summary>
         /// 出力ファイル作成コマンド実行
@@ -277,6 +291,31 @@ namespace CsvConverter.WPF.ViewModels
                         OutputColumns.Add(new CsvConvertViewModelHeader(newOutputColumnSettingEntity));
                     }
                 });
+        }
+
+        private void ExecuteSelectInputFileCommand()
+        {
+            var settings = new FileDialogSettings()
+            {
+                Filter = new ExtensionFilter("CSVファイル", "*.csv | *"),
+                Title = "CSVファイル選択",
+            };
+            if (_commonDialogService.ShowDialog(settings))
+            {
+                InputCsvFilePath = settings.FileName;
+            }
+        }
+        private void ExecuteSelectOutputFileCommand()
+        {
+            var settings = new FileDialogSettings()
+            {
+                Filter = new ExtensionFilter("CSVファイル", "*.csv | *"),
+                Title = "CSVファイル選択",
+            };
+            if (_commonDialogService.ShowDialog(settings))
+            {
+                OutputCsvFilePath = settings.FileName;
+            }
         }
     }
 }

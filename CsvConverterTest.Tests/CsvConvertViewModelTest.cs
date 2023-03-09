@@ -15,6 +15,7 @@ namespace CsvConverterTest.Tests
         public void 入力ファイルと出力ファイルを指定してそのまま出力するシナリオ()
         {
             var dialogServiceMock = new Mock<IDialogService>();
+            var commonDialogServiceMock = new Mock<ICommonDialogService>();
             var messageServiceMock = new Mock<IMessageService>();
             var logicMock = new Mock<ICsvConvertLogic>();
             logicMock.Setup(x => x.Execute(It.IsAny<InputCsvFileEntity>(), It.IsAny<OutputCsvFileEntity>(), It.IsAny<OutputSettingEntity>()))
@@ -27,6 +28,7 @@ namespace CsvConverterTest.Tests
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
+                commonDialogServiceMock.Object,
                 logicMock.Object,
                 csvFileMock.Object);
 
@@ -81,9 +83,11 @@ b,c,a
 
             var dialogServiceMock = new Mock<IDialogService>();
             var messageServiceMock = new Mock<IMessageService>();
+            var commonDialogServiceMock = new Mock<ICommonDialogService>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
+                commonDialogServiceMock.Object,
                 logicMock.Object,
                 csvFileMock.Object);
 
@@ -153,9 +157,11 @@ a,c
                 });
             var dialogServiceMock = new Mock<IDialogService>();
             var messageServiceMock = new Mock<IMessageService>();
+            var commonDialogServiceMock = new Mock<ICommonDialogService>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
+                commonDialogServiceMock.Object,
                 logicMock.Object,
                 csvFileMock.Object);
 
@@ -246,9 +252,11 @@ a,b,c,b
                     callback?.Invoke(dialogResult);
                 });
             var messageServiceMock = new Mock<IMessageService>();
+            var commonDialogServiceMock = new Mock<ICommonDialogService>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
+                commonDialogServiceMock.Object,
                 logicMock.Object, csvFileMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
@@ -348,9 +356,11 @@ a,b,c,abc
                     callback?.Invoke(dialogResult);
                 });
             var messageServiceMock = new Mock<IMessageService>();
+            var commonDialogServiceMock = new Mock<ICommonDialogService>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
-                messageServiceMock.Object, 
+                messageServiceMock.Object,
+                commonDialogServiceMock.Object,
                 logicMock.Object,
                 csvFileMock.Object);
 

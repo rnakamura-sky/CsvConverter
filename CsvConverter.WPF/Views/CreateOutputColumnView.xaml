@@ -4,6 +4,17 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:selectors="clr-namespace:CsvConverter.WPF.Views.Selectors"
              prism:ViewModelLocator.AutoWireViewModel="True">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="WindowStyle" Value="ToolWindow" />
+            <!--<Setter Property="ResizeMode" Value="NoResize"/>-->
+            <Setter Property="ShowInTaskbar" Value="False"/>
+            <!--<Setter Property="SizeToContent" Value="WidthAndHeight"/>-->
+            <Setter Property="Width" Value="800"/>
+            <Setter Property="Height" Value="600"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <UserControl.Resources>
         <DataTemplate x:Key="InputDataTemplate">
             <StackPanel>
