@@ -1,4 +1,5 @@
 ﻿using CsvConverter.Domain.Entities;
+using CsvConverter.Domain.ValueObjects;
 using CsvConverter.WPF.ViewModels;
 using Prism.Services.Dialogs;
 
@@ -32,15 +33,18 @@ namespace CsvConverterTest.Tests
 
             Assert.AreEqual("", viewModel.HeaderName);
             Assert.AreEqual(true, viewModel.IsOutput);
-            Assert.IsNull(viewModel.SelectedInputHeader);
-            Assert.AreEqual(false, viewModel.IsInputHeader);
-            Assert.AreEqual(3, viewModel.Headers.Count);
-            Assert.AreEqual("Field1", viewModel.Headers[0].Header);
-            Assert.AreEqual("Field2", viewModel.Headers[1].Header);
-            Assert.AreEqual("Field3", viewModel.Headers[2].Header);
+
+            viewModel.SelectedTargetSettingType = TargetSettingType.Input;
+            var target = viewModel.Target as CreateOutputColumnViewModelTargetInput;
+            Assert.IsNotNull(target);
+            Assert.IsNull(target.SelectedHeader);
+            Assert.AreEqual(3, target.Headers.Count);
+            Assert.AreEqual("Field1", target.Headers[0].Header);
+            Assert.AreEqual("Field2", target.Headers[1].Header);
+            Assert.AreEqual("Field3", target.Headers[2].Header);
 
             viewModel.HeaderName = "Field4";
-            viewModel.SelectedInputHeader = viewModel.Headers[1];
+            target.SelectedHeader = target.Headers[1];
 
             viewModel.CreateCommand.Execute();
         }

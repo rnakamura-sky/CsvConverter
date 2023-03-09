@@ -1,16 +1,29 @@
 ﻿<UserControl x:Class="CsvConverter.WPF.Views.CreateOutputColumnView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:prism="http://prismlibrary.com/"             
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:selectors="clr-namespace:CsvConverter.WPF.Views.Selectors"
              prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.Resources>
+        <DataTemplate x:Key="InputDataTemplate">
+            <StackPanel>
+                <Label Content="入力項目設定"/>
+                <ComboBox ItemsSource="{Binding Headers}"
+                          DisplayMemberPath="Header"
+                          SelectedItem="{Binding SelectedHeader}"/>
+            </StackPanel>
+        </DataTemplate>
+        <selectors:TargetSettingDataTemplateSelector x:Key="TargetSettingSelector"
+                                                     InputTargetDataTemplate="{StaticResource InputDataTemplate}"/>
+    </UserControl.Resources>
     <StackPanel>
         <TextBox Text="{Binding HeaderName}"/>
         <CheckBox IsChecked="{Binding IsOutput}"/>
-        <ComboBox ItemsSource="{Binding Headers}"
-                  DisplayMemberPath="Header"
-                  SelectedItem="{Binding SelectedInputHeader}"/>
-        <CheckBox IsChecked="{Binding IsInputHeader}"
-                  IsEnabled="False"/>
+        <ComboBox ItemsSource="{Binding TargetSettingTypes}"
+                  DisplayMemberPath="Name"
+                  SelectedItem="{Binding SelectedTargetSettingType}"/>
+        <ContentControl ContentTemplateSelector="{StaticResource TargetSettingSelector}"
+                        Content="{Binding Target}"/>
         <Button Content="作成"
                 Command="{Binding CreateCommand}"/>
         <Button Content="キャンセル"

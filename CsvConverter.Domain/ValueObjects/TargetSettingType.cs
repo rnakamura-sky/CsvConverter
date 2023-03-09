@@ -5,8 +5,8 @@
     /// </summary>
     public class TargetSettingType : ValueObject<TargetSettingType>
     {
-        public static readonly TargetSettingType None = new TargetSettingType(0, "None", "(なし)");
-        public static readonly TargetSettingType Input = new TargetSettingType(1, "Input", "入力項目");
+        public static readonly TargetSettingType None = new(0, "None", "(なし)");
+        public static readonly TargetSettingType Input = new(1, "Input", "入力項目");
 
         /// <summary>
         /// 値
@@ -56,7 +56,7 @@
 
         protected override int GetHashCodeCore()
         {
-            throw new NotImplementedException();
+            return Value.GetHashCode();
         }
     }
 }

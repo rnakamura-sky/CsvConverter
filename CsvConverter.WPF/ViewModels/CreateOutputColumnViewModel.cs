@@ -1,4 +1,5 @@
 ﻿using CsvConverter.Domain.Entities;
+using CsvConverter.Domain.ValueObjects;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -12,6 +13,12 @@ namespace CsvConverter.WPF.ViewModels
     {
         public CreateOutputColumnViewModel()
         {
+            TargetSettingTypes = new ObservableCollection<TargetSettingType>();
+            foreach (var targetSettingType in TargetSettingType.GetTargetSettingTypes())
+            {
+                TargetSettingTypes.Add(targetSettingType);
+            }
+
             CreateCommand = new DelegateCommand(ExecuteCreateCommand);
             CancelCommand = new DelegateCommand(ExecuteCancelCommand);
         }
@@ -35,24 +42,46 @@ namespace CsvConverter.WPF.ViewModels
             set { SetProperty(ref _isOutput, value); }
         }
 
-        private HeaderEntity _selectedInputHeader;
-        public HeaderEntity SelectedInputHeader
+        private ObservableCollection<TargetSettingType> _targetSettingTypes;
+        public ObservableCollection<TargetSettingType> TargetSettingTypes
         {
-            get { return _selectedInputHeader; }
-            set { SetProperty(ref _selectedInputHeader, value); }
+            get { return _targetSettingTypes; }
+            set { SetProperty(ref _targetSettingTypes, value); }
         }
 
-        private bool _isInputHeader = false;
-        public bool IsInputHeader
+        private TargetSettingType _selectedTargetSettingType;
+        public TargetSettingType SelectedTargetSettingType
         {
-            get { return _isInputHeader; }
-            set { SetProperty(ref _isInputHeader, value); }
+            get { return _selectedTargetSettingType; }
+            set
+            {
+                if (SetProperty(ref _selectedTargetSettingType, value))
+                {
+                    if (value is null)
+                    {
+                        Target = null;
+                    }
+                    if (value == TargetSettingType.Input)
+                    {
+                        Target = new CreateOutputColumnViewModelTargetInput(Headers);
+                    }
+                }
+            }
+        }
+
+        private CreateOutputColumnViewModelTargetBase _target;
+
+        public CreateOutputColumnViewModelTargetBase Target
+        {
+            get => _target;
+            set => SetProperty(ref _target, value);
         }
 
         private void ExecuteCreateCommand()
         {
+            var targetSetting = Target.GetTargetSettingEntity();
             var column = new OutputColumnSettingEntity(
-                0, HeaderName, IsOutput, new InputTargetSettingEntity(SelectedInputHeader.Header));
+                0, HeaderName, IsOutput, targetSetting);
             var parameters = new DialogParameters()
             {
                 {nameof(OutputColumnSettingEntity), column},
