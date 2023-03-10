@@ -211,6 +211,53 @@ C,A,B,ACB
             var logic = new CsvConvertLogic();
             logic.Execute(inputCsvFile, outputCsvFile, outputSetting);
 
+            inputCsvFileMock.VerifyAll();
+            outputCsvFileMock.VerifyAll();
+        }
+
+        [TestMethod]
+        public void 自作入力項目と連結項目の組み合わせシナリオ()
+        {
+            var inputCsvFileMock = new Mock<IInputCsvFileRepository>();
+            var inputFileContent =
+@"Field1,Field2,Field3
+a,b,c
+C,A,B
+う,あ,い
+";
+            inputCsvFileMock.Setup(x => x.GetData(It.IsAny<string>())).Returns(inputFileContent);
+            var outputCsvFileMock = new Mock<IOutputCsvFileRepository>();
+            outputCsvFileMock.Setup(x => x.WriteData("OutputFilePath", It.IsAny<string>())).Callback((string filePath, string data) =>
+            {
+                Assert.AreEqual("OutputFilePath", filePath);
+                var resultContent =
+@"Field1,Field2,Field3,OutputField4,Concatenate
+a,b,c,b,bab
+C,A,B,A,ACA
+う,あ,い,あ,あうあ
+";
+                Assert.AreEqual(resultContent, data);
+            });
+
+            var inputCsvFile = new InputCsvFileEntity(inputCsvFileMock.Object, "InputFilePath");
+            var outputCsvFile = new OutputCsvFileEntity(outputCsvFileMock.Object, "OutputFilePath");
+
+            var outputSetting = new OutputSettingEntity(new List<OutputColumnSettingEntity>()
+            {
+                new OutputColumnSettingEntity(0, "Field1", true, new InputTargetSettingEntity("Field1")),
+                new OutputColumnSettingEntity(1, "Field2", true, new InputTargetSettingEntity("Field2")),
+                new OutputColumnSettingEntity(2, "Field3", true, new InputTargetSettingEntity("Field3")),
+                new OutputColumnSettingEntity(3, "OutputField4", true, new InputTargetSettingEntity("Field2")),
+                new OutputColumnSettingEntity(4, "Concatenate", true, new ConcatenateTargetSettingEntity(
+                    new List<HeaderEntity>(){
+                        new HeaderEntity(1, "Field2"),
+                        new HeaderEntity(0, "Field1"),
+                        new HeaderEntity(3, "OutputField4"),
+                    })),
+            });
+
+            var logic = new CsvConvertLogic();
+            logic.Execute(inputCsvFile, outputCsvFile, outputSetting);
 
             inputCsvFileMock.VerifyAll();
             outputCsvFileMock.VerifyAll();

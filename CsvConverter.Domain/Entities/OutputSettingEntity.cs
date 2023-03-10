@@ -79,16 +79,16 @@
             var outputRowList = new List<RowEntity>();
             foreach (var row in data.Data)
             {
-                var outputData = new List<FieldEntity>();
+                var outputRowEntity = new RowEntity();
                 for (index = 0; index < outputRowSettings.Count; ++index)
                 {
                     var outputHeader = headers[index];
                     var outputRowSetting = outputRowSettings[index];
 
-                    var fieldValue = outputRowSetting.CreateFieldValue(row);
-                    outputData.Add(new FieldEntity(outputHeader, fieldValue));
+                    var fieldValue = outputRowSetting.CreateFieldValue(row, outputRowEntity);
+                    outputRowEntity = outputRowEntity.Add(new FieldEntity(outputHeader, fieldValue));
                 }
-                outputRowList.Add(new RowEntity(outputData));
+                outputRowList.Add(outputRowEntity);
             }
 
             return new FileDataEntity(headers, outputRowList);

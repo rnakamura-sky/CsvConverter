@@ -93,9 +93,9 @@
                             </Style>
                         </ListView.Resources>
                         <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="項目名" DisplayMemberBinding="{Binding FieldName}"/>
-
+                            <GridView AllowsColumnReorder="False">
+                                <GridViewColumn Header="項目名"
+                                                DisplayMemberBinding="{Binding FieldName}"/>
                                 <GridViewColumn Header="出力">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
@@ -105,6 +105,10 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <GridViewColumn Header="項目概要"
+                                                DisplayMemberBinding="{Binding FieldContent}"/>
+                                <GridViewColumn Header="入力項目"
+                                                DisplayMemberBinding="{Binding InputFieldName}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>

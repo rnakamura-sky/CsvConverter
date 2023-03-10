@@ -35,11 +35,35 @@ namespace CsvConverter.WPF.ViewModels
             set { SetProperty(ref _isOutput, value); }
         }
 
+        private string _fieldContent = string.Empty;
+        
+        /// <summary>
+        /// 項目出力概要
+        /// </summary>
+        public string FieldContent
+        {
+            get { return _fieldContent; }
+            set { SetProperty(ref _fieldContent, value); }
+        }
+
+        private string _intputFieldName = string.Empty;
+        
+        /// <summary>
+        /// 入力項目名
+        /// </summary>
+        public string InputFieldName
+        {
+            get { return _intputFieldName; }
+            set { SetProperty(ref _intputFieldName, value); }
+        }
+
         public CsvConvertViewModelHeader(OutputColumnSettingEntity entity)
         {
             _entity = entity;
             FieldName = _entity.OutputHeader;
             IsOutput = _entity.IsOutput;
+            FieldContent = _entity.GetFieldContent();
+            InputFieldName = _entity.GetInputFieldName();
         }
 
         /// <summary>

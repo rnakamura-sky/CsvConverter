@@ -1,4 +1,6 @@
-﻿namespace CsvConverter.Domain.Entities
+﻿using CsvConverter.Domain.Exceptions;
+
+namespace CsvConverter.Domain.Entities
 {
     /// <summary>
     /// 行情報を管理するEntity
@@ -9,6 +11,15 @@
         /// 項目情報
         /// </summary>
         public IReadOnlyList<FieldEntity> Fields { get; }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public RowEntity()
+            : this(new List<FieldEntity>())
+        {
+
+        }
 
         /// <summary>
         /// コンストラクタ
@@ -27,7 +38,23 @@
         public FieldEntity GetField(string header)
         {
             var field = Fields.Where(x => x.Header.HeaderName == header).FirstOrDefault();
-            return field ?? FieldEntity.None;
+            if (field is null)
+            {
+                throw new InvalidException();
+            }
+            return field;
+        }
+
+        /// <summary>
+        /// 項目情報追加
+        /// </summary>
+        /// <param name="fieldEntity"></param>
+        /// <returns></returns>
+        public RowEntity Add(FieldEntity fieldEntity)
+        {
+            var fields = Fields.ToList();
+            fields.Add(fieldEntity);
+            return new RowEntity(fields);
         }
     }
 }

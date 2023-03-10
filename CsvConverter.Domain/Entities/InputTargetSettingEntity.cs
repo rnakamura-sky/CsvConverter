@@ -26,9 +26,28 @@ namespace CsvConverter.Domain.Entities
         /// </summary>
         /// <param name="rowEntity">入力データ</param>
         /// <returns></returns>
-        public override string CreateFieldValue(RowEntity rowEntity)
+        public override string CreateFieldValue(RowEntity inputRowEntity, RowEntity outputRowEntity)
         {
-            return rowEntity.GetField(InputHeaderName).FieldValue;
+            return inputRowEntity.GetField(InputHeaderName).FieldValue;
+        }
+
+        /// <summary>
+        /// 項目がどのような加工を行うか文字列で取得
+        /// </summary>
+        /// <returns></returns>
+        public override string GetFieldContent()
+        {
+            return InputHeaderName;
+        }
+
+        /// <summary>
+        /// 項目の入力項目を取得
+        /// 取得が入力項目ではない場合は空白文字列を返す
+        /// </summary>
+        /// <returns></returns>
+        public override string GetInputFieldName()
+        {
+            return InputHeaderName;
         }
     }
 }
