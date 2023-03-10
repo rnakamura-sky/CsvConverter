@@ -1,6 +1,8 @@
 ﻿using CsvConverter.Domain.Entities;
 using CsvConverter.Domain.ValueObjects;
+using CsvConverter.WPF.Services;
 using CsvConverter.WPF.ViewModels;
+using Moq;
 using Prism.Services.Dialogs;
 
 namespace CsvConverterTest.Tests
@@ -51,6 +53,69 @@ namespace CsvConverterTest.Tests
         }
 
         [TestMethod]
+        public void 入力項目設定の検証チェック()
+        {
+            var parameters = new DialogParameters();
+            var inputHeaders = new List<HeaderEntity>()
+            {
+                new HeaderEntity(0, "Field1"),
+                new HeaderEntity(1, "Field2"),
+                new HeaderEntity(2, "Field3"),
+            };
+            parameters.Add(nameof(CreateOutputColumnViewModel.InputHeaders), inputHeaders);
+            parameters.Add(nameof(CreateOutputColumnViewModel.OutputHeaders), new List<HeaderEntity>());
+
+            var messageServiceMock = new Mock<IMessageService>();
+            var viewModel = new CreateOutputColumnViewModel(messageServiceMock.Object);
+            viewModel.OnDialogOpened(parameters);
+            viewModel.RequestClose += (result) => {
+                Assert.AreEqual(ButtonResult.OK, result.Result);
+                var column = result.Parameters.GetValue<OutputColumnSettingEntity>(nameof(OutputColumnSettingEntity));
+                Assert.IsNotNull(column);
+                Assert.AreEqual("Field4", column.OutputHeader);
+                Assert.AreEqual("Field2", ((InputTargetSettingEntity)column.TargetSetting).InputHeaderName);
+                Assert.AreEqual(true, column.IsOutput);
+            };
+
+            Assert.AreEqual("", viewModel.HeaderName);
+            Assert.AreEqual(true, viewModel.IsOutput);
+
+            messageServiceMock.Setup(x => x.ShowDialog(It.IsAny<string>()))
+                .Callback((string message) => {
+                    Assert.AreEqual("[新規項目名] 必須入力です。", message);
+                });
+            viewModel.CreateCommand.Execute();
+
+            viewModel.HeaderName = "Field4";
+            messageServiceMock.Setup(x => x.ShowDialog(It.IsAny<string>()))
+                .Callback((string message) => {
+                    Assert.AreEqual("[項目タイプ] 選択してください。", message);
+                });
+            viewModel.CreateCommand.Execute();
+
+            viewModel.SelectedTargetSettingType = TargetSettingType.Input;
+            messageServiceMock.Setup(x => x.ShowDialog(It.IsAny<string>()))
+                .Callback((string message) => {
+                    Assert.AreEqual("[入力元項目] 選択してください。", message);
+                });
+            viewModel.CreateCommand.Execute();
+
+            var target = viewModel.Target as CreateOutputColumnViewModelTargetInput;
+            Assert.IsNotNull(target);
+            Assert.IsNull(target.SelectedHeader);
+            Assert.AreEqual(3, target.Headers.Count);
+            Assert.AreEqual("Field1", target.Headers[0].HeaderName);
+            Assert.AreEqual("Field2", target.Headers[1].HeaderName);
+            Assert.AreEqual("Field3", target.Headers[2].HeaderName);
+
+            target.SelectedHeader = target.Headers[1];
+
+            viewModel.CreateCommand.Execute();
+
+            messageServiceMock.VerifyAll();
+        }
+
+        [TestMethod]
         public void 結合項目作成シナリオ()
         {
             var parameters = new DialogParameters();
@@ -69,7 +134,8 @@ namespace CsvConverterTest.Tests
             parameters.Add(nameof(CreateOutputColumnViewModel.InputHeaders), inputHeaders);
             parameters.Add(nameof(CreateOutputColumnViewModel.OutputHeaders), outputHeaders);
 
-            var viewModel = new CreateOutputColumnViewModel();
+            var messageServiceMock = new Mock<IMessageService>();
+            var viewModel = new CreateOutputColumnViewModel(messageServiceMock.Object);
             viewModel.OnDialogOpened(parameters);
             viewModel.RequestClose += (result) => {
                 Assert.AreEqual(ButtonResult.OK, result.Result);
@@ -88,6 +154,28 @@ namespace CsvConverterTest.Tests
             Assert.AreEqual("", viewModel.HeaderName);
             Assert.AreEqual(true, viewModel.IsOutput);
 
+            messageServiceMock.Setup(x => x.ShowDialog(It.IsAny<string>()))
+                .Callback((string message) => {
+                    Assert.AreEqual("[新規項目名] 必須入力です。", message);
+                });
+            viewModel.CreateCommand.Execute();
+
+            viewModel.HeaderName = "OutputField4";
+            messageServiceMock.Setup(x => x.ShowDialog(It.IsAny<string>()))
+                .Callback((string message) => {
+                    Assert.AreEqual("[項目タイプ] 選択してください。", message);
+                });
+            viewModel.CreateCommand.Execute();
+
+            viewModel.SelectedTargetSettingType = TargetSettingType.Concatenate;
+            messageServiceMock.Setup(x => x.ShowDialog(It.IsAny<string>()))
+                .Callback((string message) => {
+                    Assert.AreEqual("[結合項目リスト] 項目を選択してください。", message);
+                });
+            viewModel.CreateCommand.Execute();
+
+
+
             viewModel.SelectedTargetSettingType = TargetSettingType.Concatenate;
             var target = viewModel.Target as CreateOutputColumnViewModelTargetConcatenate;
             Assert.IsNotNull(target);
@@ -96,8 +184,6 @@ namespace CsvConverterTest.Tests
             Assert.AreEqual("OutputField2", target.Headers[1].HeaderName);
             Assert.AreEqual("OutputField3", target.Headers[2].HeaderName);
             Assert.AreEqual(0, target.ConcatenateHeaders.Count);
-
-            viewModel.HeaderName = "OutputField4";
 
             target.SelectedHeader = target.Headers[0];
             target.SelectCommand.Execute();
@@ -113,6 +199,8 @@ namespace CsvConverterTest.Tests
             Assert.AreEqual("OutputField3", target.ConcatenateHeaders[2].HeaderName);
 
             viewModel.CreateCommand.Execute();
+
+            messageServiceMock.VerifyAll();
         }
     }
 }

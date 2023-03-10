@@ -1,8 +1,10 @@
 ﻿using CsvConverter.Domain.Entities;
 using CsvConverter.Domain.ValueObjects;
+using CsvConverter.WPF.ValidationAttributes;
 using Prism.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace CsvConverter.WPF.ViewModels
 {
@@ -48,15 +50,17 @@ namespace CsvConverter.WPF.ViewModels
         /// <summary>
         /// 結合選択項目リスト
         /// </summary>
-        private ObservableCollection<HeaderEntity> _concatenateHeaders;
+        private ObservableCollection<HeaderEntity> _concatenateHeaders = new();
 
         /// <summary>
         /// 結合選択項目リスト
         /// </summary>
+        [Display(Name = "結合項目リスト")]
+        [CollectionCount(ErrorMessage = "項目を選択してください。")]
         public ObservableCollection<HeaderEntity> ConcatenateHeaders
         {
             get { return _concatenateHeaders; }
-            set { SetProperty(ref _concatenateHeaders, value); }
+            set { SetValidateProperty(ref _concatenateHeaders, value); }
         }
 
         /// <summary>
@@ -102,10 +106,15 @@ namespace CsvConverter.WPF.ViewModels
                 Headers.Add(header);
             }
 
-            ConcatenateHeaders = new ObservableCollection<HeaderEntity>();
-
             SelectCommand = new DelegateCommand(ExecuteSelectCommand, CanSelectCommand);
             DeleteCommand = new DelegateCommand(ExecuteDeleteCommand, CanDeleteCommand);
+
+            ////ConcatenateHeadersの要素が変わった時にもvalidateしたいので、変更があった時に
+            ////検証が実行されるようにする
+            ConcatenateHeaders.CollectionChanged += (sender, e) =>
+            {
+                ValidateProperty(ConcatenateHeaders, nameof(ConcatenateHeaders));
+            };
         }
 
         /// <summary>

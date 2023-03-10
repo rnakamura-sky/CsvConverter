@@ -1,10 +1,9 @@
 ﻿using CsvConverter.Domain.Entities;
 using CsvConverter.Domain.ValueObjects;
-using Prism.Mvvm;
 
 namespace CsvConverter.WPF.ViewModels
 {
-    public abstract class CreateOutputColumnViewModelTargetBase : BindableBase
+    public abstract class CreateOutputColumnViewModelTargetBase : ViewModelBase
 	{
         /// <summary>
         /// TargetSettingType

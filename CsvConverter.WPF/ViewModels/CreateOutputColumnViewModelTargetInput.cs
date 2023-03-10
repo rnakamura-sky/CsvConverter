@@ -1,8 +1,8 @@
 ﻿using CsvConverter.Domain.Entities;
 using CsvConverter.Domain.ValueObjects;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace CsvConverter.WPF.ViewModels
 {
@@ -16,10 +16,13 @@ namespace CsvConverter.WPF.ViewModels
         }
 
         private HeaderEntity _selectedHeader;
+
+        [Display(Name = "入力元項目")]
+        [Required(ErrorMessage = "選択してください。")]
         public HeaderEntity SelectedHeader
         {
             get { return _selectedHeader; }
-            set { SetProperty(ref _selectedHeader, value); }
+            set { SetValidateProperty(ref _selectedHeader, value); }
         }
 
         public CreateOutputColumnViewModelTargetInput(IReadOnlyList<HeaderEntity> headers)

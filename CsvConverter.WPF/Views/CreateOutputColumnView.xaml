@@ -16,6 +16,36 @@
         </Style>
     </prism:Dialog.WindowStyle>
     <UserControl.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTipService.InitialShowDelay" Value="200"/>
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                                   Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type ComboBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTipService.InitialShowDelay" Value="200"/>
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                                   Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type ListBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTipService.InitialShowDelay" Value="200"/>
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                                   Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <DataTemplate x:Key="InputDataTemplate">
             <StackPanel>
                 <Label Content="入力項目設定"/>
@@ -117,8 +147,9 @@
                 <Label DockPanel.Dock="Left"
                        Width="100"
                        Content="新規項目名"/>
-                <TextBox Text="{Binding HeaderName}"
-                         VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding HeaderName, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalContentAlignment="Center">
+                </TextBox>
             </DockPanel>
             <DockPanel Grid.Row="2"
                        Margin="5,5,20,5">
