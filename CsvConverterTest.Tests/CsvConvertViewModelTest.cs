@@ -4,6 +4,7 @@ using CsvConverter.Domain.Repositories;
 using CsvConverter.WPF.Services;
 using CsvConverter.WPF.ViewModels;
 using Moq;
+using NuGet.Frameworks;
 using Prism.Services.Dialogs;
 
 namespace CsvConverterTest.Tests
@@ -44,6 +45,64 @@ namespace CsvConverterTest.Tests
             Assert.AreEqual(true, viewModel.ExecuteCommand.CanExecute());
             viewModel.ExecuteCommand.Execute();
 
+            logicMock.VerifyAll();
+        }
+
+        [TestMethod]
+        public void ファイルを参照ボタンで指定するシナリオ()
+        {
+            var dialogServiceMock = new Mock<IDialogService>();
+            var commonDialogServiceMock = new Mock<ICommonDialogService>();
+            var messageServiceMock = new Mock<IMessageService>();
+            var logicMock = new Mock<ICsvConvertLogic>();
+            logicMock.Setup(x => x.Execute(It.IsAny<InputCsvFileEntity>(), It.IsAny<OutputCsvFileEntity>(), It.IsAny<OutputSettingEntity>()))
+                .Callback((InputCsvFileEntity inputFile, OutputCsvFileEntity outputFile, OutputSettingEntity setting) =>
+                {
+                    Assert.AreEqual("InputCsvFilePath", inputFile.CsvFilePath);
+                    Assert.AreEqual("OutputCsvFilePath", outputFile.CsvFilePath);
+                });
+            var csvFileMock = new Mock<ICsvFileRepository>();
+            var viewModel = new CsvConvertViewModel(
+                dialogServiceMock.Object,
+                messageServiceMock.Object,
+                commonDialogServiceMock.Object,
+                logicMock.Object,
+                csvFileMock.Object);
+
+            Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
+            Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
+            Assert.AreEqual(false, viewModel.ExecuteCommand.CanExecute());
+
+            ////入力ファイル指定
+            commonDialogServiceMock.Setup(x => x.ShowDialog(It.IsAny<ICommonDialogSettings>())).Returns(true)
+                .Callback((ICommonDialogSettings settings) =>
+                {
+                    var dialogSettings = settings as FileDialogSettings;
+                    Assert.IsNotNull(dialogSettings);
+
+                    dialogSettings.FileName = "InputCsvFilePath";
+                });
+
+            viewModel.SelectInputFileCommand.Execute();
+            Assert.AreEqual("InputCsvFilePath", viewModel.InputCsvFilePath);
+            Assert.AreEqual(false, viewModel.ExecuteCommand.CanExecute());
+
+            ////出力ファイル指定
+            commonDialogServiceMock.Setup(x => x.ShowDialog(It.IsAny<ICommonDialogSettings>())).Returns(true)
+                .Callback((ICommonDialogSettings settings) =>
+                {
+                    var dialogSettings = settings as FileDialogSettings;
+                    Assert.IsNotNull(dialogSettings);
+
+                    dialogSettings.FileName = "OutputCsvFilePath";
+                });
+            viewModel.SelectOutputFileCommand.Execute();
+            Assert.AreEqual("OutputCsvFilePath", viewModel.OutputCsvFilePath);
+
+            Assert.AreEqual(true, viewModel.ExecuteCommand.CanExecute());
+            viewModel.ExecuteCommand.Execute();
+
+            commonDialogServiceMock.VerifyAll();
             logicMock.VerifyAll();
         }
 

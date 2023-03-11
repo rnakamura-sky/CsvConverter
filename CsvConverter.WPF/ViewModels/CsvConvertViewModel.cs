@@ -293,6 +293,9 @@ namespace CsvConverter.WPF.ViewModels
                 });
         }
 
+        /// <summary>
+        /// 入力ファイル取得コマンド実行
+        /// </summary>
         private void ExecuteSelectInputFileCommand()
         {
             var settings = new FileDialogSettings()
@@ -305,6 +308,10 @@ namespace CsvConverter.WPF.ViewModels
                 InputCsvFilePath = settings.FileName;
             }
         }
+
+        /// <summary>
+        /// 出力ファイル取得コマンド実行
+        /// </summary>
         private void ExecuteSelectOutputFileCommand()
         {
             var settings = new FileDialogSettings()
