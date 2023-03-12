@@ -5,7 +5,6 @@ using CsvConverter.WPF.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -109,6 +108,35 @@ namespace CsvConverter.WPF.ViewModels
                 }
             }
         }
+
+        /// <summary>
+        /// 設定名
+        /// </summary>
+        private string _settingName;
+
+        /// <summary>
+        /// 設定名
+        /// </summary>
+        public string SettingName
+        {
+            get { return _settingName; }
+            set { SetProperty(ref _settingName, value); }
+        }
+
+        /// <summary>
+        /// 設定ファイルパス
+        /// </summary>
+        private string _settingFilePath;
+
+        /// <summary>
+        /// 設定ファイルパス
+        /// </summary>
+        public string SettingFilePath
+        {
+            get { return _settingFilePath; }
+            set { SetProperty(ref _settingFilePath, value); }
+        }
+
 
         private ObservableCollection<HeaderEntity> _inputHeaders = new();
         

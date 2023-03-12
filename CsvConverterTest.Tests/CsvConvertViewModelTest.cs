@@ -93,7 +93,7 @@ a,b,c,b,abb
             Assert.AreEqual(1, viewModel.InputHeaders[1].HeaderId);
             Assert.AreEqual("Field3", viewModel.InputHeaders[2].HeaderName);
             Assert.AreEqual(2, viewModel.InputHeaders[2].HeaderId);
-            
+
             Assert.AreEqual(3, viewModel.OutputColumns.Count);
             Assert.AreEqual("Field1", viewModel.OutputColumns[0].FieldName);
             Assert.AreEqual(true, viewModel.OutputColumns[0].IsOutput);
@@ -774,6 +774,135 @@ a,b,c,b,abb
 
             viewModel.OutputCsvFilePath = "OutputCsvFilePath";
 
+            Assert.AreEqual(true, viewModel.ExecuteCommand.CanExecute());
+            viewModel.ExecuteCommand.Execute();
+
+            logicMock.VerifyAll();
+            csvFileMock.VerifyAll();
+            dialogServiceMock.VerifyAll();
+        }
+
+
+
+        [TestMethod]
+        public void 設定保存_読み込みシナリオ()
+        {
+            var logicMock = new Mock<ICsvConvertLogic>();
+            logicMock.Setup(x => x.Execute(It.IsAny<InputCsvFileEntity>(), It.IsAny<OutputCsvFileEntity>(), It.IsAny<OutputSettingEntity>()))
+                .Callback((InputCsvFileEntity inputFile, OutputCsvFileEntity outputFile, OutputSettingEntity setting) =>
+                {
+                    Assert.AreEqual("InputCsvFilePath", inputFile.CsvFilePath);
+                    Assert.AreEqual("OutputCsvFilePath", outputFile.CsvFilePath);
+
+                    ////実際に実装部分についても実行を行う
+                    var logic = new CsvConvertLogic();
+                    logic.Execute(inputFile, outputFile, setting);
+                });
+            var fileString =
+@"Field1,Field2,Field3
+A,B,C
+a,b,c
+";
+            var csvFileMock = new Mock<ICsvFileRepository>();
+            csvFileMock.Setup(x => x.GetData(It.IsAny<string>())).Returns(fileString);
+            csvFileMock.Setup(x => x.WriteData(It.IsAny<string>(), It.IsAny<string>()))
+                .Callback((string filePath, string outFileString) =>
+                {
+                    Assert.AreEqual("OutputCsvFilePath", filePath);
+                    var expectFileString =
+@"Field1,Field2,Field3,OutputField4,OutputField5
+A,B,C,B,ABB
+a,b,c,b,abb
+";
+                    Assert.AreEqual(expectFileString, outFileString);
+
+                });
+
+            var settingRepositoryMock = new Mock<ISettingRepository>();
+            var dialogServiceMock = new Mock<IDialogService>();
+            var messageServiceMock = new Mock<IMessageService>();
+            var commonDialogServiceMock = new Mock<ICommonDialogService>();
+            var viewModel = new CsvConvertViewModel(
+                dialogServiceMock.Object,
+                messageServiceMock.Object,
+                commonDialogServiceMock.Object,
+                logicMock.Object,
+                csvFileMock.Object
+                settingRepositoryMock.Object);
+
+            ////初期表示
+            Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
+            Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
+            Assert.AreEqual(0, viewModel.InputHeaders.Count);
+            Assert.AreEqual(0, viewModel.OutputColumns.Count);
+            Assert.AreEqual(false, viewModel.InputCommand.CanExecute());
+            Assert.AreEqual(false, viewModel.CreateOutputColumnFromInputCommand.CanExecute());
+            Assert.AreEqual(false, viewModel.ExecuteCommand.CanExecute());
+            Assert.AreEqual("", viewModel.SettingName);
+            Assert.AreEqual("", viewModel.SettingFilePath);
+            Assert.AreEqual(true, viewModel.ReadSettingCommand.CanExecute());
+            Assert.AreEqual(false, viewModel.LoadSettingCommand.CanExecute());
+
+            ////設定ファイル読み込み
+            commonDialogServiceMock.Setup(x => x.ShowDialog(It.IsAny<ICommonDialogSettings>())).Returns(true)
+                .Callback((ICommonDialogSettings settings) => {
+                    var fileSettings = settings as FileDialogSettings;
+                    Assert.IsNotNull(fileSettings);
+                    fileSettings.FileName = "SettingFile";
+                });
+            var settingEntity = new SettingEntity(
+                "SampleSetting",
+                new List<HeaderEntity>()
+                {
+                    new HeaderEntity(0, "Field1"),
+                    new HeaderEntity(1, "Field2"),
+                    new HeaderEntity(2, "Field3"),
+                },
+                new OutputSettingEntity(
+                    new List<OutputColumnSettingEntity>()
+                    {
+
+                    }));
+            settingRepositoryMock.Setup(x => x.Read(It.IsAny<string>())).Returns(settingEntity);
+            viewModel.ReadSettingCommand.Execute();
+
+            Assert.AreEqual(3, viewModel.InputHeaders.Count);
+            Assert.AreEqual("Field1", viewModel.InputHeaders[0].HeaderName);
+            Assert.AreEqual(0, viewModel.InputHeaders[0].HeaderId);
+            Assert.AreEqual("Field2", viewModel.InputHeaders[1].HeaderName);
+            Assert.AreEqual(1, viewModel.InputHeaders[1].HeaderId);
+            Assert.AreEqual("Field3", viewModel.InputHeaders[2].HeaderName);
+            Assert.AreEqual(2, viewModel.InputHeaders[2].HeaderId);
+            Assert.AreEqual(5, viewModel.OutputColumns.Count);
+            Assert.AreEqual("OutputField1", viewModel.OutputColumns[0].FieldName);
+            Assert.AreEqual(true, viewModel.OutputColumns[0].IsOutput);
+            Assert.AreEqual("Field1", viewModel.OutputColumns[0].FieldContent);
+            Assert.AreEqual("Field1", viewModel.OutputColumns[0].InputFieldName);
+            Assert.AreEqual("OutputField2", viewModel.OutputColumns[1].FieldName);
+            Assert.AreEqual(true, viewModel.OutputColumns[1].IsOutput);
+            Assert.AreEqual("Field2", viewModel.OutputColumns[1].FieldContent);
+            Assert.AreEqual("Field2", viewModel.OutputColumns[1].InputFieldName);
+            Assert.AreEqual("OutputField3", viewModel.OutputColumns[2].FieldName);
+            Assert.AreEqual(true, viewModel.OutputColumns[2].IsOutput);
+            Assert.AreEqual("Field3", viewModel.OutputColumns[2].FieldContent);
+            Assert.AreEqual("Field3", viewModel.OutputColumns[2].InputFieldName);
+            Assert.AreEqual("OutputField4", viewModel.OutputColumns[3].FieldName);
+            Assert.AreEqual(true, viewModel.OutputColumns[3].IsOutput);
+            Assert.AreEqual("Field2", viewModel.OutputColumns[3].FieldContent);
+            Assert.AreEqual("Field2", viewModel.OutputColumns[3].InputFieldName);
+            Assert.AreEqual("OutputField5", viewModel.OutputColumns[4].FieldName);
+            Assert.AreEqual(true, viewModel.OutputColumns[4].IsOutput);
+            Assert.AreEqual("OutputField1+OutputField2+OutputField4", viewModel.OutputColumns[4].FieldContent);
+            Assert.AreEqual("", viewModel.OutputColumns[4].InputFieldName);
+
+            ////入力パス設定
+            viewModel.InputCsvFilePath = "InputCsvFilePath";
+            Assert.AreEqual(true, viewModel.InputCommand.CanExecute());
+            Assert.AreEqual(true, viewModel.CreateOutputColumnFromInputCommand.CanExecute());
+            Assert.AreEqual(false, viewModel.ExecuteCommand.CanExecute());
+
+            ////出力パス設定
+            viewModel.OutputCsvFilePath = "OutputCsvFilePath";
             Assert.AreEqual(true, viewModel.ExecuteCommand.CanExecute());
             viewModel.ExecuteCommand.Execute();
 

@@ -20,7 +20,7 @@
         /// </summary>
         private OutputSettingEntity()
         {
-            ColumnSettings= new List<OutputColumnSettingEntity>();
+            ColumnSettings = new List<OutputColumnSettingEntity>();
         }
 
         /// <summary>
