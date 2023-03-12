@@ -1,6 +1,4 @@
-﻿using CsvConverter.WPF.ViewModels;
-using Microsoft.Xaml.Behaviors;
-using System;
+﻿using Microsoft.Xaml.Behaviors;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -117,6 +115,11 @@ namespace CsvConverter.WPF.Views.Behaviors
                 if (itemsControl.ItemContainerGenerator.IndexFromContainer(_dragDropObject.DraggedItem) >= 0)
                 {
                     var targetContainer = GetTemplatedRootElement(e.OriginalSource as FrameworkElement);
+                    ////ListViewのListViewItem以外の部分では項目が取得できないため処理を行わない
+                    if (targetContainer is null)
+                    {
+                        return;
+                    }
                     var index = itemsControl.ItemContainerGenerator.IndexFromContainer(targetContainer);
                     if (index >= 0)
                     {
