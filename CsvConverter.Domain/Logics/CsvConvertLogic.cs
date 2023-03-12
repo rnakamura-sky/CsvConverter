@@ -19,7 +19,7 @@ namespace CsvConverter.Domain.Logics
             var data = inputCsvFile.GetData();
 
             ////出力設定情報が無ければ、入力CSV情報からそのまま作成する
-            var outputSetting = setting != OutputSettingEntity.None ? setting : new OutputSettingEntity(data);
+            var outputSetting = setting != OutputSettingEntity.None ? setting : new OutputSettingEntity(data.Headers);
 
             var outputData = outputSetting.CreateFileData(data);
 

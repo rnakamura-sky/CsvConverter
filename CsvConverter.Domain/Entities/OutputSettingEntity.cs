@@ -27,12 +27,12 @@
         /// コンストラクタ
         /// 入力されたファイル情報をそのまま出力行設定に登録を行う
         /// </summary>
-        /// <param name="fileDataEntity">ファイル情報</param>
-        public OutputSettingEntity(FileDataEntity fileDataEntity)
+        /// <param name="InputHeaders">ヘッダー情報</param>
+        public OutputSettingEntity(IReadOnlyList<HeaderEntity> InputHeaders)
         {
             var rowSettings = new List<OutputColumnSettingEntity>();
             int index = 0;
-            foreach (var header in fileDataEntity.Headers)
+            foreach (var header in InputHeaders)
             {
                 rowSettings.Add(new OutputColumnSettingEntity(
                                         index,

@@ -5,6 +5,7 @@ using CsvConverter.WPF.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -69,6 +70,9 @@ namespace CsvConverter.WPF.ViewModels
 
             SelectInputFileCommand = new DelegateCommand(ExecuteSelectInputFileCommand);
             SelectOutputFileCommand = new DelegateCommand(ExecuteSelectOutputFileCommand);
+
+            CreateOutputColumnFromInputCommand = new DelegateCommand(
+                ExecuteCreateOutputColumnFromInputCommand, CanExecuteCreateOutputColumnFromInputCommand);
         }
 
         private string _inputCsvFilePath = string.Empty;
@@ -138,14 +142,24 @@ namespace CsvConverter.WPF.ViewModels
         }
 
         /// <summary>
-        /// 出力ファイル作成実行コマンド
+        /// 入力ファイル選択コマンド
         /// </summary>
-        public DelegateCommand ExecuteCommand { get; }
+        public DelegateCommand SelectInputFileCommand { get; }
+
+        /// <summary>
+        /// 出力ファイル選択コマンド
+        /// </summary>
+        public DelegateCommand SelectOutputFileCommand { get; }
 
         /// <summary>
         /// 入力ファイル情報取得コマンド
         /// </summary>
         public DelegateCommand InputCommand { get; }
+
+        /// <summary>
+        /// 入力項目から出力項目生成コマンド
+        /// </summary>
+        public DelegateCommand CreateOutputColumnFromInputCommand { get; }
 
         /// <summary>
         /// 出力項目並び替えコマンド
@@ -157,8 +171,10 @@ namespace CsvConverter.WPF.ViewModels
         /// </summary>
         public DelegateCommand CreateCommand { get; }
 
-        public DelegateCommand SelectInputFileCommand { get; }
-        public DelegateCommand SelectOutputFileCommand { get; }
+        /// <summary>
+        /// 出力ファイル作成実行コマンド
+        /// </summary>
+        public DelegateCommand ExecuteCommand { get; }
 
         /// <summary>
         /// 出力ファイル作成コマンド実行
@@ -205,13 +221,7 @@ namespace CsvConverter.WPF.ViewModels
                 InputHeaders.Add(header);
             }
 
-            var outputSetting = new OutputSettingEntity(fileData);
-
-            OutputColumns.Clear();
-            foreach (var columnSetting in outputSetting.ColumnSettings)
-            {
-                OutputColumns.Add(new CsvConvertViewModelHeader(columnSetting));
-            }
+            CreateOutputColumnFromInputCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -323,6 +333,23 @@ namespace CsvConverter.WPF.ViewModels
             {
                 OutputCsvFilePath = settings.FileName;
             }
+        }
+
+
+        private void ExecuteCreateOutputColumnFromInputCommand()
+        {
+            var outputSetting = new OutputSettingEntity(InputHeaders);
+
+            OutputColumns.Clear();
+            foreach (var columnSetting in outputSetting.ColumnSettings)
+            {
+                OutputColumns.Add(new CsvConvertViewModelHeader(columnSetting));
+            }
+        }
+
+        private bool CanExecuteCreateOutputColumnFromInputCommand()
+        {
+            return InputHeaders.Count > 0;
         }
     }
 }
