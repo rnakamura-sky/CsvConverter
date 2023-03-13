@@ -1,6 +1,7 @@
 ﻿using CsvConverter.Domain.Entities;
 using CsvConverter.Domain.Logics;
 using CsvConverter.Domain.Repositories;
+using CsvConverter.Infrastructure.Drive;
 using CsvConverter.WPF.Services;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -29,6 +30,10 @@ namespace CsvConverter.WPF.ViewModels
         /// </summary>
         private readonly ICsvFileRepository _csvFileRepository;
 
+        /// <summary>
+        /// 設定情報
+        /// </summary>
+        private readonly ISettingRepository _settingRepository;
 
         /// <summary>
         /// コンストラクタ
@@ -39,7 +44,8 @@ namespace CsvConverter.WPF.ViewModels
                   new MessageService(),
                   new FileDialogService(),
                   new CsvConvertLogic(),
-                  new CsvFileAccess())
+                  new CsvFileAccess(),
+                  new SettingDrive())
         {
 
         }
@@ -54,13 +60,15 @@ namespace CsvConverter.WPF.ViewModels
             IMessageService messageService,
             ICommonDialogService commonDialogService,
             ICsvConvertLogic logic,
-            ICsvFileRepository csvFileRepository)
+            ICsvFileRepository csvFileRepository,
+            ISettingRepository settingRepository)
         {
             _dialogService = dialogService;
             _messageService = messageService;
             _commonDialogService = commonDialogService;
             _logic = logic;
             _csvFileRepository = csvFileRepository;
+            _settingRepository = settingRepository;
 
             ExecuteCommand = new DelegateCommand(ExecuteCommandExecute, CanExecuteCommand);
             InputCommand = new DelegateCommand(ExecuteInputCommand, CanInputCommand);
@@ -72,6 +80,10 @@ namespace CsvConverter.WPF.ViewModels
 
             CreateOutputColumnFromInputCommand = new DelegateCommand(
                 ExecuteCreateOutputColumnFromInputCommand, CanExecuteCreateOutputColumnFromInputCommand);
+            ReadSettingCommand = new DelegateCommand(
+                ExecuteReadSettingCommand, CanExecuteReadSettingCommand);
+            SaveSettingCommand = new DelegateCommand(
+                ExecuteSaveSettingCommand, CanExecuteSaveSettingCommand);
         }
 
         private string _inputCsvFilePath = string.Empty;
@@ -112,7 +124,7 @@ namespace CsvConverter.WPF.ViewModels
         /// <summary>
         /// 設定名
         /// </summary>
-        private string _settingName;
+        private string _settingName = string.Empty;
 
         /// <summary>
         /// 設定名
@@ -126,7 +138,7 @@ namespace CsvConverter.WPF.ViewModels
         /// <summary>
         /// 設定ファイルパス
         /// </summary>
-        private string _settingFilePath;
+        private string _settingFilePath = string.Empty;
 
         /// <summary>
         /// 設定ファイルパス
@@ -203,6 +215,16 @@ namespace CsvConverter.WPF.ViewModels
         /// 出力ファイル作成実行コマンド
         /// </summary>
         public DelegateCommand ExecuteCommand { get; }
+
+        /// <summary>
+        /// 設定情報読み込みコマンド
+        /// </summary>
+        public DelegateCommand ReadSettingCommand { get; }
+
+        /// <summary>
+        /// 設定情報保存コマンド
+        /// </summary>
+        public DelegateCommand SaveSettingCommand { get; }
 
         /// <summary>
         /// 出力ファイル作成コマンド実行
@@ -378,6 +400,93 @@ namespace CsvConverter.WPF.ViewModels
         private bool CanExecuteCreateOutputColumnFromInputCommand()
         {
             return InputHeaders.Count > 0;
+        }
+
+        /// <summary>
+        /// 設定情報読み込み実行
+        /// </summary>
+        private void ExecuteReadSettingCommand()
+        {
+            var fileDialogSettings = new FileDialogSettings()
+            {
+                Filter = new ExtensionFilter("設定ファイル", "*"),
+                Title = "設定ファイル選択",
+            };
+            if (_commonDialogService.ShowDialog(fileDialogSettings))
+            {
+                var setting = _settingRepository.Read(fileDialogSettings.FileName);
+
+                SettingFilePath = fileDialogSettings.FileName;
+
+                SettingName = setting.SettingName;
+                InputHeaders.Clear();
+                foreach (var header in setting.Headers)
+                {
+                    InputHeaders.Add(header);
+                }
+                OutputColumns.Clear();
+                foreach (var outputColumn in setting.OutputSetting.ColumnSettings)
+                {
+                    OutputColumns.Add(new CsvConvertViewModelHeader(outputColumn));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 設定情報読み込み実行可否
+        /// </summary>
+        /// <returns></returns>
+        private bool CanExecuteReadSettingCommand()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// 設定情報保存コマンド実行
+        /// </summary>
+        private void ExecuteSaveSettingCommand()
+        {
+            var setting = GetSettingEntity();
+            var fileDialogSettings = new FileDialogSettings()
+            {
+                Filter = new ExtensionFilter("設定ファイル", "*"),
+                Title = "設定ファイル保存先選択",
+            };
+            if (_commonDialogService.ShowDialog(fileDialogSettings))
+            {
+                _settingRepository.Save(fileDialogSettings.FileName, setting);
+                _messageService.ShowDialog("設定を保存しました。");
+                SettingFilePath = fileDialogSettings.FileName;
+            }
+
+        }
+
+        /// <summary>
+        /// 設定情報保存コマンド実行可否
+        /// </summary>
+        private bool CanExecuteSaveSettingCommand()
+        {
+            if (OutputColumns.Count == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 設定情報を取得します。
+        /// </summary>
+        /// <returns></returns>
+        private SettingEntity GetSettingEntity()
+        {
+            var inputHeaders = new List<HeaderEntity>();
+            foreach (var header in InputHeaders)
+            {
+                inputHeaders.Add(header);
+            }
+            var outputSetting = GetOutputSetting();
+
+            return new SettingEntity(SettingName, inputHeaders, outputSetting);
         }
     }
 }

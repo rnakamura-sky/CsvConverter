@@ -22,7 +22,7 @@
                     <Setter Property="ToolTipService.InitialShowDelay" Value="200"/>
                     <Setter Property="ToolTip"
                             Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                                   Path=(Validation.Errors)[0].ErrorContent}"/>
+                                   Path=(Validation.Errors)/ErrorContent}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -32,7 +32,7 @@
                     <Setter Property="ToolTipService.InitialShowDelay" Value="200"/>
                     <Setter Property="ToolTip"
                             Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                                   Path=(Validation.Errors)[0].ErrorContent}"/>
+                                   Path=(Validation.Errors)/ErrorContent}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -42,7 +42,7 @@
                     <Setter Property="ToolTipService.InitialShowDelay" Value="200"/>
                     <Setter Property="ToolTip"
                             Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                                   Path=(Validation.Errors)[0].ErrorContent}"/>
+                                   Path=(Validation.Errors)/ErrorContent}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>

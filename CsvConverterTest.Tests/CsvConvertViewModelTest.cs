@@ -45,7 +45,7 @@ a,b,c,b,abb
                     Assert.AreEqual(expectFileString, outFileString);
 
                 });
-
+            var settingRepositoryMock = new Mock<ISettingRepository>();
             var dialogServiceMock = new Mock<IDialogService>();
             var messageServiceMock = new Mock<IMessageService>();
             var commonDialogServiceMock = new Mock<ICommonDialogService>();
@@ -54,7 +54,8 @@ a,b,c,b,abb
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
                 logicMock.Object,
-                csvFileMock.Object);
+                csvFileMock.Object,
+                settingRepositoryMock.Object);
 
             ////初期表示
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
@@ -196,12 +197,14 @@ a,b,c,b,abb
                     Assert.AreEqual("OutputCsvFilePath", outputFile.CsvFilePath);
                 });
             var csvFileMock = new Mock<ICsvFileRepository>();
+            var settingRepositoryMock = new Mock<ISettingRepository>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
                 logicMock.Object,
-                csvFileMock.Object);
+                csvFileMock.Object,
+                settingRepositoryMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -232,12 +235,14 @@ a,b,c,b,abb
                     Assert.AreEqual("OutputCsvFilePath", outputFile.CsvFilePath);
                 });
             var csvFileMock = new Mock<ICsvFileRepository>();
+            var settingRepositoryMock = new Mock<ISettingRepository>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
                 logicMock.Object,
-                csvFileMock.Object);
+                csvFileMock.Object,
+                settingRepositoryMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -313,12 +318,14 @@ b,c,a
             var dialogServiceMock = new Mock<IDialogService>();
             var messageServiceMock = new Mock<IMessageService>();
             var commonDialogServiceMock = new Mock<ICommonDialogService>();
+            var settingRepositoryMock = new Mock<ISettingRepository>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
                 logicMock.Object,
-                csvFileMock.Object);
+                csvFileMock.Object,
+                settingRepositoryMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -385,6 +392,7 @@ a,c
                     Assert.AreEqual(expectFileString, outFileString);
 
                 });
+            var settingRepositoryMock = new Mock<ISettingRepository>();
             var dialogServiceMock = new Mock<IDialogService>();
             var messageServiceMock = new Mock<IMessageService>();
             var commonDialogServiceMock = new Mock<ICommonDialogService>();
@@ -393,7 +401,8 @@ a,c
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
                 logicMock.Object,
-                csvFileMock.Object);
+                csvFileMock.Object,
+                settingRepositoryMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -484,11 +493,13 @@ a,b,c,b
                 });
             var messageServiceMock = new Mock<IMessageService>();
             var commonDialogServiceMock = new Mock<ICommonDialogService>();
+            var settingRepositoryMock = new Mock<ISettingRepository>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
-                logicMock.Object, csvFileMock.Object);
+                logicMock.Object, csvFileMock.Object,
+                settingRepositoryMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -572,8 +583,11 @@ a,b,c,abc
                 {
                     var headers = parameters.GetValue<IReadOnlyList<HeaderEntity>>(nameof(CreateOutputColumnViewModel.InputHeaders));
                     Assert.AreEqual(3, headers.Count);
+                    Assert.AreEqual(0, headers[0].HeaderId);
                     Assert.AreEqual("Field1", headers[0].HeaderName);
+                    Assert.AreEqual(1, headers[1].HeaderId);
                     Assert.AreEqual("Field2", headers[1].HeaderName);
+                    Assert.AreEqual(2, headers[2].HeaderId);
                     Assert.AreEqual("Field3", headers[2].HeaderName);
 
                     var columnSetting = new OutputColumnSettingEntity(0, "Field4", true, new ConcatenateTargetSettingEntity(
@@ -589,12 +603,14 @@ a,b,c,abc
                 });
             var messageServiceMock = new Mock<IMessageService>();
             var commonDialogServiceMock = new Mock<ICommonDialogService>();
+            var settingRepositoryMock = new Mock<ISettingRepository>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
                 logicMock.Object,
-                csvFileMock.Object);
+                csvFileMock.Object,
+                settingRepositoryMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -675,12 +691,14 @@ a,b,c,b,abb
             var dialogServiceMock = new Mock<IDialogService>();
             var messageServiceMock = new Mock<IMessageService>();
             var commonDialogServiceMock = new Mock<ICommonDialogService>();
+            var settingRepositoryMock = new Mock<ISettingRepository>();
             var viewModel = new CsvConvertViewModel(
                 dialogServiceMock.Object,
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
                 logicMock.Object,
-                csvFileMock.Object);
+                csvFileMock.Object,
+                settingRepositoryMock.Object);
 
             Assert.AreEqual(string.Empty, viewModel.InputCsvFilePath);
             Assert.AreEqual(string.Empty, viewModel.OutputCsvFilePath);
@@ -810,14 +828,13 @@ a,b,c
                 {
                     Assert.AreEqual("OutputCsvFilePath", filePath);
                     var expectFileString =
-@"Field1,Field2,Field3,OutputField4,OutputField5
+@"OutputField1,OutputField2,OutputField3,OutputField4,OutputField5
 A,B,C,B,ABB
 a,b,c,b,abb
 ";
                     Assert.AreEqual(expectFileString, outFileString);
 
                 });
-
             var settingRepositoryMock = new Mock<ISettingRepository>();
             var dialogServiceMock = new Mock<IDialogService>();
             var messageServiceMock = new Mock<IMessageService>();
@@ -827,7 +844,7 @@ a,b,c,b,abb
                 messageServiceMock.Object,
                 commonDialogServiceMock.Object,
                 logicMock.Object,
-                csvFileMock.Object
+                csvFileMock.Object,
                 settingRepositoryMock.Object);
 
             ////初期表示
@@ -841,7 +858,7 @@ a,b,c,b,abb
             Assert.AreEqual("", viewModel.SettingName);
             Assert.AreEqual("", viewModel.SettingFilePath);
             Assert.AreEqual(true, viewModel.ReadSettingCommand.CanExecute());
-            Assert.AreEqual(false, viewModel.LoadSettingCommand.CanExecute());
+            Assert.AreEqual(false, viewModel.SaveSettingCommand.CanExecute());
 
             ////設定ファイル読み込み
             commonDialogServiceMock.Setup(x => x.ShowDialog(It.IsAny<ICommonDialogSettings>())).Returns(true)
@@ -861,11 +878,22 @@ a,b,c,b,abb
                 new OutputSettingEntity(
                     new List<OutputColumnSettingEntity>()
                     {
-
+                        new OutputColumnSettingEntity(0, "OutputField1", true, new InputTargetSettingEntity("Field1")),
+                        new OutputColumnSettingEntity(1, "OutputField2", true, new InputTargetSettingEntity("Field2")),
+                        new OutputColumnSettingEntity(2, "OutputField3", true, new InputTargetSettingEntity("Field3")),
+                        new OutputColumnSettingEntity(3, "OutputField4", true, new InputTargetSettingEntity("Field2")),
+                        new OutputColumnSettingEntity(4, "OutputField5", true, new ConcatenateTargetSettingEntity(
+                            new List<HeaderEntity>()
+                            {
+                                new HeaderEntity(0, "OutputField1"),
+                                new HeaderEntity(1, "OutputField2"),
+                                new HeaderEntity(3, "OutputField4"),
+                            })),
                     }));
             settingRepositoryMock.Setup(x => x.Read(It.IsAny<string>())).Returns(settingEntity);
             viewModel.ReadSettingCommand.Execute();
-
+            Assert.AreEqual("SettingFile", viewModel.SettingFilePath);
+            Assert.AreEqual("SampleSetting", viewModel.SettingName);
             Assert.AreEqual(3, viewModel.InputHeaders.Count);
             Assert.AreEqual("Field1", viewModel.InputHeaders[0].HeaderName);
             Assert.AreEqual(0, viewModel.InputHeaders[0].HeaderId);
@@ -906,9 +934,86 @@ a,b,c,b,abb
             Assert.AreEqual(true, viewModel.ExecuteCommand.CanExecute());
             viewModel.ExecuteCommand.Execute();
 
+            ////設定の保存
+            Assert.AreEqual(true, viewModel.SaveSettingCommand.CanExecute());
+            commonDialogServiceMock.Setup(x => x.ShowDialog(It.IsAny<ICommonDialogSettings>())).Returns(true)
+                .Callback((ICommonDialogSettings settings) =>
+                {
+                    var fileSettings = settings as FileDialogSettings;
+                    Assert.IsNotNull(fileSettings);
+                    fileSettings.FileName = "SaveSettingFile";
+                });
+            settingRepositoryMock.Setup(x => x.Save(It.IsAny<string>(), It.IsAny<SettingEntity>()))
+                .Callback((string settingFilePath, SettingEntity setting) => {
+                    Assert.AreEqual("SaveSettingFile", settingFilePath);
+
+                    Assert.AreEqual("SampleSetting", setting.SettingName);
+                    Assert.AreEqual(3, setting.Headers.Count);
+                    Assert.AreEqual("Field1", setting.Headers[0].HeaderName);
+                    Assert.AreEqual(0, setting.Headers[0].HeaderId);
+                    Assert.AreEqual("Field2", setting.Headers[1].HeaderName);
+                    Assert.AreEqual(1, setting.Headers[1].HeaderId);
+                    Assert.AreEqual("Field3", setting.Headers[2].HeaderName);
+                    Assert.AreEqual(2, setting.Headers[2].HeaderId);
+                    var outputSetting = setting.OutputSetting;
+                    var outputColumns = outputSetting.ColumnSettings;
+
+                    Assert.AreEqual(5, outputColumns.Count);
+                    Assert.AreEqual(0, outputColumns[0].Index);
+                    Assert.AreEqual("OutputField1", outputColumns[0].OutputHeader);
+                    Assert.AreEqual(true, outputColumns[0].IsOutput);
+                    var outputTarget = outputColumns[0].TargetSetting as InputTargetSettingEntity;
+                    Assert.IsNotNull(outputTarget);
+                    Assert.AreEqual("Field1", outputTarget.InputHeaderName);
+
+                    Assert.AreEqual(1, outputColumns[1].Index);
+                    Assert.AreEqual("OutputField2", outputColumns[1].OutputHeader);
+                    Assert.AreEqual(true, outputColumns[1].IsOutput);
+                    outputTarget = outputColumns[1].TargetSetting as InputTargetSettingEntity;
+                    Assert.IsNotNull(outputTarget);
+                    Assert.AreEqual("Field2", outputTarget.InputHeaderName);
+
+                    Assert.AreEqual(2, outputColumns[2].Index);
+                    Assert.AreEqual("OutputField3", outputColumns[2].OutputHeader);
+                    Assert.AreEqual(true, outputColumns[2].IsOutput);
+                    outputTarget = outputColumns[2].TargetSetting as InputTargetSettingEntity;
+                    Assert.IsNotNull(outputTarget);
+                    Assert.AreEqual("Field3", outputTarget.InputHeaderName);
+
+                    Assert.AreEqual(3, outputColumns[3].Index);
+                    Assert.AreEqual("OutputField4", outputColumns[3].OutputHeader);
+                    Assert.AreEqual(true, outputColumns[3].IsOutput);
+                    outputTarget = outputColumns[3].TargetSetting as InputTargetSettingEntity;
+                    Assert.IsNotNull(outputTarget);
+                    Assert.AreEqual("Field2", outputTarget.InputHeaderName);
+
+                    Assert.AreEqual(4, outputColumns[4].Index);
+                    Assert.AreEqual("OutputField5", outputColumns[4].OutputHeader);
+                    Assert.AreEqual(true, outputColumns[4].IsOutput);
+                    var concatenateTarget = outputColumns[4].TargetSetting as ConcatenateTargetSettingEntity;
+                    Assert.IsNotNull(concatenateTarget);
+                    Assert.AreEqual(3, concatenateTarget.OutputHeaderEntities.Count);
+                    Assert.AreEqual(0, concatenateTarget.OutputHeaderEntities[0].HeaderId);
+                    Assert.AreEqual("OutputField1", concatenateTarget.OutputHeaderEntities[0].HeaderName);
+                    Assert.AreEqual(1, concatenateTarget.OutputHeaderEntities[1].HeaderId);
+                    Assert.AreEqual("OutputField2", concatenateTarget.OutputHeaderEntities[1].HeaderName);
+                    Assert.AreEqual(3, concatenateTarget.OutputHeaderEntities[2].HeaderId);
+                    Assert.AreEqual("OutputField4", concatenateTarget.OutputHeaderEntities[2].HeaderName);
+                });
+            messageServiceMock.Setup(x => x.ShowDialog(It.IsAny<string>())).Callback((string message) =>
+            {
+                Assert.AreEqual("設定を保存しました。", message);
+            });
+            viewModel.SaveSettingCommand.Execute();
+            Assert.AreEqual("SaveSettingFile", viewModel.SettingFilePath);
+
+
             logicMock.VerifyAll();
             csvFileMock.VerifyAll();
             dialogServiceMock.VerifyAll();
+            settingRepositoryMock.VerifyAll();
+            commonDialogServiceMock.VerifyAll();
+            messageServiceMock.VerifyAll();
         }
     }
 }
